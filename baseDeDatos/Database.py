@@ -19,6 +19,28 @@ class Database():
 
     # metodos 
     
+    """
+         Métodos del requerimiento funcional 1 (HU01)
+         M1: Jefe de  Mesa crear ejecutivo
+            insert into ejecutivo value ()
+        M2: Crear area, tipo de ticket y criticidad
+            insert into area value()
+            inser into tipoDeTicket
+            insert into criticidad
+        M3: editar area,tipodeticket y criticidad
+            update XXXX blablablabla
+        M4: eliminar area,tipodeticket y criticdad, pero si tiene asociado a un ticket no se podra
+            delete blablablabla
+            (if SELECT * FROM ticket WHERE idArea=XXX, si es nulo se puede eliminar, sino da un mensaje)
+        M5: eliminar ejecutivo (cambiar su estado a desactivado)
+            update blablablabla
+    """
+  
+    
+    
+    
+    
+    
     # metodo que selecciona todos los ticket de la BD
     def selectTodos(self):
         sql = 'SELECT * FROM ticket'
