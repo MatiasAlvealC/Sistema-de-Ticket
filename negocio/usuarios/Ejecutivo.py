@@ -10,3 +10,6 @@ class Ejecutivo(Usuario):
         self.idArea=idArea
         self.rutJefeMesa=rutJefeMesa
         
+    # agregar los metodos
+    # Crear y actulizar (observaciones, estado,area) ticket
+        
