@@ -37,9 +37,208 @@ class Database():
     """
   
     
+    """
+      Métodos del requerimiento funcional 1 (HU01)
+         M1: Jefe de  Mesa crear ejecutivo
+            insert into ejecutivo value ()"""
+
+    # Método para crear ejecutivo
+    def crearEjecutivo(self, rut, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena):
+        sql = 'INSERT INTO ejecutivo (rutEjecutivo, nombre, apellidoPaterno, apellidoMaterno, nombreUsuario, contraseña, estado) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+        try:
+            # Suponiendo que por defecto el estado es 'Activo'
+            estado = 'Activo'
+            self.cursor.execute(sql, (rut, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena, estado))
+            self.conexion.commit()
+            print("Ejecutivo creado correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al crear ejecutivo: {err}") 
+
+    """ M2: Crear area, tipo de ticket y criticidad
+            insert into area value()
+            inser into tipoDeTicket
+            insert into criticidad """
     
+    # Método para crear una área
+    def crearArea(self, nombre_area, descripcion):
+        sql = 'INSERT INTO area (nombreArea, descripcion) VALUES (%s, %s)'
+        try:
+            self.cursor.execute(sql, (nombre_area, descripcion))
+            self.conexion.commit()
+            print("Área creada correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al crear área: {err}")
+
+    # Método para crear tipo de ticket
+    def crearTipoTicket(self, nombre_tipo, descripcion):
+        sql = 'INSERT INTO tipoDeTicket (nombreTipo, descripcion) VALUES (%s, %s)'
+        try:
+            self.cursor.execute(sql, (nombre_tipo, descripcion))
+            self.conexion.commit()
+            print("Tipo de ticket creado correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al crear tipo de ticket: {err}")
+
+    # Método para crear 
+    def crearCriticidad(self, nombre_criticidad, descripcion):
+        sql = 'INSERT INTO criticidad (nombre, descripcion) VALUES (%s, %s)'
+        try:
+            self.cursor.execute(sql, (nombre_criticidad, descripcion))
+            self.conexion.commit()
+            print("Criticidad creada correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al crear criticidad: {err}")
+
     
+    """M3: editar area,tipodeticket y criticidad
+            update XXXX blablablabla """
+   
+   # Método de editar area 
+    def editarArea(self, id_area, nombre_area, descripcion):
+        sql = 'UPDATE area SET nombreArea = %s, descripcion = %s WHERE idArea = %s'
+        try:
+            self.cursor.execute(sql, (nombre_area, descripcion, id_area))
+            self.conexion.commit()
+            print("Área actualizada correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al actualizar área: {err}")
+   
+   # Método de editar tipo de ticket
+    def editarTipoTicket(self, id_tipo, nombre_tipo, descripcion):
+        sql = 'UPDATE tipoDeTicket SET nombreTipo = %s, descripcion = %s WHERE idTipoTicket = %s'
+        try:
+            self.cursor.execute(sql, (nombre_tipo, descripcion, id_tipo))
+            self.conexion.commit()
+            print("Tipo de ticket actualizado correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al actualizar tipo de ticket: {err}")
+
+    # Método de editar criticidad 
+    def editarCriticidad(self, id_criticidad, nombre_criticidad, descripcion):
+        sql = 'UPDATE criticidad SET nombre = %s, descripcion = %s WHERE idCriticidad = %s'
+        try:
+            self.cursor.execute(sql, (nombre_criticidad, descripcion, id_criticidad))
+            self.conexion.commit()
+            print("Criticidad actualizada correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al actualizar criticidad: {err}")
+
+  
+    # Método eliminación area 
     
+    def eliminarAreaPorId(self):
+        idArea=input('Id del área=')
+        sql1='select * from Area where idArea='+repr(idArea)
+        try:
+            self.cursor.execute(sql1)
+            if self.cursor.fetchone()!=None:  #valida que el area exista
+                sql2='select * from ticket where idArea='+repr(idArea)
+                try:
+                    self.cursor.execute(sql2)
+                    if self.cursor.fetchall()!=None:   #si no hay un area usandose en un ticket
+                        print('No se puede eliminar, el área esta asociado ya un ticket')
+                    else:
+                        sql3 = 'delete from Area where idArea='+repr(idArea)
+                        try:
+                            self.cursor.execute(sql3)
+                            self.conexion.commit()
+                        except Exception as err:
+                            self.conexion.rollback()
+                            print(err)
+                except Exception as err:
+                    print(err)
+            else:
+                print('No existe dicha área')
+        except Exception as err:
+            print(err)
+
+    # Método eliminación tipo de ticket
+    
+    def eliminarTipoDeTicketPorId(self):
+        idTipoTicket=input('Id del tipo de ticket=')
+        sql1='select * from TipoTicket where idTipoTicket='+repr(idTipoTicket)
+        try:
+            self.cursor.execute(sql1)
+            if self.cursor.fetchone()!=None:  #valida que el tipo de ticket exista
+                sql2='select * from ticket where idTipoTicket='+repr(idTipoTicket)
+                try:
+                    self.cursor.execute(sql2)
+                    if self.cursor.fetchall()!=None:   #si no hay un area usandose en un ticket
+                        print('No se puede eliminar, el tipo de ticket esta asociado ya un ticket')
+                    else:
+                        sql3 = 'delete from tipodeTicket where idTipoTicket='+repr(idTipoTicket)
+                        try:
+                            self.cursor.execute(sql3)
+                            self.conexion.commit()
+                        except Exception as err:
+                            self.conexion.rollback()
+                            print(err)
+                except Exception as err:
+                    print(err)
+            else:
+                print('No existe dicho tipo de ticket')
+        except Exception as err:
+            print(err)
+
+    
+    # Método eliminación criticidad 
+    
+    def eliminarAreaPorId(self):
+        idCriticidad=input('Id de la criticidad=')
+        sql1='select * from Criticidad where idCriticidad='+repr(idCriticidad)
+        try:
+            self.cursor.execute(sql1)
+            if self.cursor.fetchone()!=None:  #valida que la criticidad exista
+                sql2='select * from Ticket where idCriticidad='+repr(idCriticidad)
+                try:
+                    self.cursor.execute(sql2)
+                    if self.cursor.fetchall()!=None:   #si no hay un area usandose en un ticket
+                        print('No se puede eliminar, la criticidad esta asociado ya un ticket')
+                    else:
+                        sql3 = 'delete from Criticidad where idCriticidad='+repr(idCriticidad)
+                        try:
+                            self.cursor.execute(sql3)
+                            self.conexion.commit()
+                        except Exception as err:
+                            self.conexion.rollback()
+                            print(err)
+                except Exception as err:
+                    print(err)
+            else:
+                print('No existe dicha criticidad')
+        except Exception as err:
+            print(err)
+
+    ###########################################################################################################################################
+    # Método para actualizar el estado del ejecutivo de Desactivado
+    # Que seria eliminarlo para la vista
+    def EliminarEjecutivo(self):
+        rutEjecutivo=int(input('Ingrese el rut del ejecutivo que desea eliminar: '))
+        sql1='select * from Ejecutivo where rutEjecutivo'+repr(rutEjecutivo)
+        try:
+            self.cursor.execute(sql1)
+            rep=self.cursor.fetchone()
+            if rep!=None:
+                sql2 = 'update Ejecutivo set estado=Desactivado where rutEjecutivo='+repr(rutEjecutivo)
+                try:
+                    self.cursor.execute(sql2)
+                    self.conexion.commit()
+                except Exception as err:
+                    self.conexion.rollback()
+                    print(err)
+            else:
+                print('No existe dicho ejecutivo')
+        except Exception as err:
+            print(err)
+    
+    ###########################################################################################################################################
     
     # metodo que selecciona todos los ticket de la BD
     def selectTodos(self):
