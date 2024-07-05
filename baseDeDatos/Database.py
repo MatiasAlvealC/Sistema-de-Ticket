@@ -3,6 +3,14 @@ import mysql.connector
 """
     Conexion a la base de dato
 """
+# este es un comentariooo
+##
+###
+###
+###
+###
+
+
 
 class Database():
     def __init__(self):
