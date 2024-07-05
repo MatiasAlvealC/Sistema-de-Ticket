@@ -85,4 +85,5 @@ class Database():
                     field, type_, null, key, default, extra))
         except Exception as err:
             print(err)
-            
+    
+    
