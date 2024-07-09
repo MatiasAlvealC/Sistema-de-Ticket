@@ -1,0 +1,10 @@
+def Bienvenida():
+    print("-----------------------------------------")
+    print("")
+    print("")
+    print("")
+    print("Hola Bienvenido a la consultora")
+    print("")
+    print("")
+    print("")
+    print("-----------------------------------------")
