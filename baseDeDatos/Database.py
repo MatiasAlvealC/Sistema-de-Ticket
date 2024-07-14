@@ -53,6 +53,26 @@ class Database:
             print("Entrada no válida. Por favor, intente de nuevo.")
             return None
 
+# Método para crear ejecutivo
+    def crearEjecutivo(
+        self,
+        rut,estado,
+        nombre,
+        apellido_paterno,
+        apellido_materno,
+        nombre_usuario,
+        contrasena,
+    ):
+        sql = "INSERT INTO ejecutivo (rutEjecutivo, estado,nombre, apellidoPaterno, apellidoMaterno, nombreUsuario, contraseña) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        try:
+            # Suponiendo que por defecto el estado es 'Activo'
+            estado = "Activo"
+            self.cursor.execute(sql,(rut,estado,nombre,apellido_paterno,apellido_materno,nombre_usuario,contrasena),)
+            self.conexion.commit()
+            print("Ejecutivo creado correctamente.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al crear ejecutivo: {err}")
 
     # metodos
 
