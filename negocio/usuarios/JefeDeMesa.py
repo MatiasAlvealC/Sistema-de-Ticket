@@ -1,4 +1,4 @@
-from Usuario import *
+from negocio.usuarios.Usuario import Usuario
 
 """
     Clase de Jefe de Mesa con sus respectivos atributos y métodos

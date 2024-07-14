@@ -1,4 +1,5 @@
-from Usuario import *
+from negocio.usuarios.Usuario import Usuario
+
 """
     Clase de Ejecutivo con sus respectivos atributos y métodos
 """

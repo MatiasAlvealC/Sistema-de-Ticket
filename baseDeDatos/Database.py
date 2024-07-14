@@ -1,4 +1,6 @@
 import mysql.connector
+from negocio.usuarios.JefeDeMesa import JefeDeMesa
+from negocio.usuarios.Ejecutivo import Ejecutivo
 
 """
     Conexion a la base de dato
@@ -26,30 +28,31 @@ class Database:
         self.conexion.close()
 
    
-    def iniciarSesion(self,nombre_usuario,contrasena):
+    def iniciarSesion(self, nombre_usuario, contrasena):
         # Conexión a la base de datos
         try:
-            sql_jefe =  "SELECT * FROM jefemesa WHERE nombre = "+repr(nombre_usuario)+"AND contrasena = "+repr(contrasena)
-            self.cursor.execute(sql, (nombre_usuario, contrasena))
-            if self.cursor.fetchone() != None:  # valida que el jefe exita
-                jefe_mesa = cursor.fetchone()
+            sql_jefe = "SELECT * FROM jefemesa WHERE nombre = %s AND contrasena = %s"
+            self.cursor.execute(sql_jefe, (nombre_usuario, contrasena))
+            jefe_mesa = self.cursor.fetchone()
+            if jefe_mesa:  # valida que el jefe exista
                 usuario = JefeDeMesa(*jefe_mesa)  # Instanciar objeto JefeDeMesa
                 print("Inicio de sesión exitoso como Jefe de Mesa.")
                 return usuario
             else:
                 # Consultar en la tabla Ejecutivo
-                sql_ejecutivo = "SELECT * FROM Ejecutivo WHERE nombreUsuario = "+repr(nombre_usuario)+" AND contraseña = "+repr(contrasena)
-                cursor.execute(sql_ejecutivo, (nombre_usuario, contrasena))
-                if self.cursor.fetchone() != None:  # valida que el ejecutivo exita
-                    ejecutivo = cursor.fetchone()
+                sql_ejecutivo = "SELECT * FROM Ejecutivo WHERE nombreUsuario = %s AND contraseña = %s"
+                self.cursor.execute(sql_ejecutivo, (nombre_usuario, contrasena))
+                ejecutivo = self.cursor.fetchone()
+                if ejecutivo:  # valida que el ejecutivo exista
                     usuario = Ejecutivo(*ejecutivo)  # Instanciar objeto Ejecutivo
                     print("Inicio de sesión exitoso como Ejecutivo.")
                     return usuario                
                 else:
                     print("Credenciales incorrectas. Intente nuevamente.")
+                    return None
         except ValueError:
             print("Entrada no válida. Por favor, intente de nuevo.")
-
+            return None
 
 
     # metodos
