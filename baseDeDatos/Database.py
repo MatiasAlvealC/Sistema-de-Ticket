@@ -27,7 +27,6 @@ class Database:
         self.cursor.close()
         self.conexion.close()
 
-   
     def iniciarSesion(self, nombre_usuario, contrasena):
         # Conexión a la base de datos
         try:
@@ -37,7 +36,7 @@ class Database:
             if jefe_mesa:  # valida que el jefe exista
                 usuario = JefeDeMesa(*jefe_mesa)  # Instanciar objeto JefeDeMesa
                 print("Inicio de sesión exitoso como Jefe de Mesa.")
-                return usuario
+                return usuario,'jefe'
             else:
                 # Consultar en la tabla Ejecutivo
                 sql_ejecutivo = "SELECT * FROM Ejecutivo WHERE nombreUsuario = %s AND contraseña = %s"
@@ -46,7 +45,7 @@ class Database:
                 if ejecutivo:  # valida que el ejecutivo exista
                     usuario = Ejecutivo(*ejecutivo)  # Instanciar objeto Ejecutivo
                     print("Inicio de sesión exitoso como Ejecutivo.")
-                    return usuario                
+                    return usuario,'ejecutivo'              
                 else:
                     print("Credenciales incorrectas. Intente nuevamente.")
                     return None

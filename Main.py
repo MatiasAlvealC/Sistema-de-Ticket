@@ -10,4 +10,4 @@ contrasena = input("Ingrese su contraseña: ")
 
 # Instancia de la clase Database
 db = Database()
-usuario = db.iniciarSesion(nombre_usuario, contrasena) 
+usuario,perfil = db.iniciarSesion(nombre_usuario, contrasena) 
