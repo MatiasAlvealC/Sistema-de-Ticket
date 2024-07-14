@@ -25,37 +25,30 @@ class Database:
         self.cursor.close()
         self.conexion.close()
 
+   
     def iniciarSesion(self,nombre_usuario,contrasena):
         # Conexión a la base de datos
         try:
-            # Consultar en la tabla jefemesa
-            
-            sql_jefe_mesa = (
-                "SELECT * FROM jefemesa WHERE nombre = "+repr(nombre_usuario)+"AND contrasena = "+repr(contrasena)
-            )
-            cursor.execute(sql_jefe_mesa, (nombre_usuario, contrasena))
-            jefe_mesa = cursor.fetchone()
-
-            # Consultar en la tabla Ejecutivo
-            sql_ejecutivo = "SELECT * FROM Ejecutivo WHERE nombreUsuario = %s AND contraseña = %s"
-            cursor.execute(sql_ejecutivo, (nombre_usuario, contrasena))
-            ejecutivo = cursor.fetchone()
-
-            # Determinar el perfil del usuario
-            if jefe_mesa:
+            sql_jefe =  "SELECT * FROM jefemesa WHERE nombre = "+repr(nombre_usuario)+"AND contrasena = "+repr(contrasena)
+            self.cursor.execute(sql, (nombre_usuario, contrasena))
+            if self.cursor.fetchone() != None:  # valida que el jefe exita
+                jefe_mesa = cursor.fetchone()
                 usuario = JefeDeMesa(*jefe_mesa)  # Instanciar objeto JefeDeMesa
                 print("Inicio de sesión exitoso como Jefe de Mesa.")
-                return usuario, "jefe_de_mesa"
-            elif ejecutivo:
-                usuario = Ejecutivo(*ejecutivo)  # Instanciar objeto Ejecutivo
-                print("Inicio de sesión exitoso como Ejecutivo.")
-                return usuario, "ejecutivo"
+                return usuario
             else:
-                print("Credenciales incorrectas. Intente nuevamente.")
+                # Consultar en la tabla Ejecutivo
+                sql_ejecutivo = "SELECT * FROM Ejecutivo WHERE nombreUsuario = "+repr(nombre_usuario)+" AND contraseña = "+repr(contrasena)
+                cursor.execute(sql_ejecutivo, (nombre_usuario, contrasena))
+                if self.cursor.fetchone() != None:  # valida que el ejecutivo exita
+                    ejecutivo = cursor.fetchone()
+                    usuario = Ejecutivo(*ejecutivo)  # Instanciar objeto Ejecutivo
+                    print("Inicio de sesión exitoso como Ejecutivo.")
+                    return usuario                
+                else:
+                    print("Credenciales incorrectas. Intente nuevamente.")
         except ValueError:
             print("Entrada no válida. Por favor, intente de nuevo.")
-
-
 
 
 
