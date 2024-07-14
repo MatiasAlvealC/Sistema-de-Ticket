@@ -29,7 +29,7 @@ class Database:
         # Conexión a la base de datos
         try:
             # Consultar en la tabla jefemesa
-            cursor = db.cursor
+            
             sql_jefe_mesa = (
                 "SELECT * FROM jefemesa WHERE nombre = "+repr(nombre_usuario)+"AND contrasena = "+repr(contrasena)
             )

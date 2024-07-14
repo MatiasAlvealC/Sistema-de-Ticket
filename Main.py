@@ -1,8 +1,6 @@
-from presentacion.Inicio import * 
+from Interfaz.Inicio import * 
 
-from presentacion.IniciarSesion import iniciarSesion
-from negocio.usuarios.Ejecutivo import Ejecutivo
-from negocio.usuarios.JefeDeMesa import JefeDeMesa
+from baseDeDatos.Database import iniciarSesion
 
 # Comienza la aplicacion
 Bienvenida()
@@ -11,6 +9,6 @@ Bienvenida()
 
 nombre_usuario = input("Ingrese su nombre de usuario: ")
 contrasena = input("Ingrese su contraseña: ")
-usuario = iniciarSesion()
+usuario = iniciarSesion(nombre_usuario, contrasena) 
 
 
