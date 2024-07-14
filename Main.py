@@ -9,13 +9,8 @@ Bienvenida()
 
 #Comienza iniciar sesion
 
-usuario, perfil = iniciarSesion()
+nombre_usuario = input("Ingrese su nombre de usuario: ")
+contrasena = input("Ingrese su contraseña: ")
+usuario = iniciarSesion()
 
-if usuario and perfil:
-    if perfil == "jefe_de_mesa":
-        usuario.menu()
-    elif perfil == "ejecutivo":
-        # Aquí puedes agregar las acciones para el ejecutivo
-        print("Acciones para el ejecutivo aún no implementadas")
-        pass
 
