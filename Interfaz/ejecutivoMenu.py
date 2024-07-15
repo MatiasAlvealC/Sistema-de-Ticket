@@ -3,10 +3,8 @@ db = Database()
 
 def ejecutivoMenu():
     while True:
-        print("\n1. Crear Ticket")
-        print("2. Cambiar Estado del Ticket a 'Resuelto'")
-        print("3. Cambiar Estado del Ticket a 'No aplicable'")
-        print("4. Agregar Observación y Cerrar Ticket")
+        print("\n1. Ver tickets")
+        print("2. Crear Ticket")
         print("0. Cerrar sesión")
 
 
@@ -24,66 +22,102 @@ def ejecutivoMenu():
         if opcion == 0:
             break
         elif opcion == 1:
-            idTicket = input('Ingrese el id del ticket: ')
-            rutUsuarioCreador =input('Rut del Creador del ticket: ')
-
-            rutJefeMesa = input('Ingrese Rut Jefe de Mesa: ')
-            idArea = input('Ingrese id area: ')
-            idTipoTicket = input('Ingrese id Tipo Ticket=')
-            idCriticidad = input('Ingrese id Criticidad: ')
-
-            nombreCliente = input('Ingrese Nombre del Cliente: ')
-            apellidoPaternoCliente = input('Apellido Paterno: ')
-            apellidoMaternoCliente = input('Apellido Materno: ')
-            rutCliente = input('Rut del Cliente: ')
-            telefonoCliente = input('Telefono del Cliente: ')
-            correoCliente = input('Correo del Cliente: ')
-            detalleServicio = input('Detalles del Servicio: ')
-            detalleProblematica = input('Detalles de la problematica: ')
-            observacion = input('Ingrese Observacion: ')
-            db.crearTicket(idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica,observacion)
-
+            verTicketMenu()
         elif opcion == 2:
-            # Cambiar estado del ticket a 'Resuelto'
-            while True:
-                try:
-                    idTicket = input("Ingrese el ID del ticket: ")
-                    if idTicket:  # Añade cualquier validación necesaria para ID
-                        nuevo_estado = "Resuelto"
-                        #db.cambiarEstadoTicket(idTicket, nuevo_estado)
-                        break
-                    else:
-                        print("Error, ingrese un ID válido.")
-                except ValueError:
-                    print("Error, ingrese un ID válido.")
-        elif opcion == 3:
-            # Cambiar estado del ticket a 'No aplicable'
-            while True:
-                try:
-                    idTicket = input("Ingrese el ID del ticket: ")
-                    if idTicket:  # Añade cualquier validación necesaria para ID
-                        nuevo_estado = "No aplicable"
-                        #db.cambiarEstadoTicket(idTicket, nuevo_estado)
-                        break
-                    else:
-                        print("Error, ingrese un ID válido.")
-                except ValueError:
-                    print("Error, ingrese un ID válido.")
-        elif opcion == 4:
-            # Agregar observación y cerrar ticket
-            while True:
-                try:
-                    idTicket = input("Ingrese el ID del ticket: ")
-                    if idTicket:  # Añade cualquier validación necesaria para ID
-                        observacion = input("Ingrese la observación: ")
-                        #db.agregarObservacionYCerrarTicket(idTicket, observacion)
-                        break
-                    else:
-                        print("Error, ingrese un ID válido.")
-                except ValueError:
-                    print("Error, ingrese un ID válido.")
+            verCrearTicketMenu()
+        else:
+            print("Opción no válida, por favor intente nuevamente.")
+
+def verCrearTicketMenu():
+        idTicket = input('Ingrese el id del ticket: ')
+        rutUsuarioCreador =input('Rut del Creador del ticket: ')
+
+        rutJefeMesa = input('Ingrese Rut Jefe de Mesa: ')
+        idArea = input('Ingrese id area: ')
+        idTipoTicket = input('Ingrese id Tipo Ticket=')
+        idCriticidad = input('Ingrese id Criticidad: ')
+
+        nombreCliente = input('Ingrese Nombre del Cliente: ')
+        apellidoPaternoCliente = input('Apellido Paterno: ')
+        apellidoMaternoCliente = input('Apellido Materno: ')
+        rutCliente = input('Rut del Cliente: ')
+        telefonoCliente = input('Telefono del Cliente: ')
+        correoCliente = input('Correo del Cliente: ')
+        detalleServicio = input('Detalles del Servicio: ')
+        detalleProblematica = input('Detalles de la problematica: ')
+        resultado = db.crearTicket(idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica)
+
+        ##########################
+        # AQUI DEBERIA MOSTRAR EL TICKET UNA PRE-VISUALIZACION
+        ####################
+        if resultado == 'creado':
+            print(" Debe asignar a un área el ticket creado para ser resuelto")
+            nuevoIdArea = input("A que área será asignado: ")
+            resultado= db.editarTicket(idTicket,"idArea",nuevoIdArea)
+            if resultado == 'actualizado':
+                print("Se le ha asignado un área al ticket")
+                db.editarTicket(idTicket,"estado",'A resolución')
+
+def verTicketMenu():
+    while True:
+        print("\n1. Ver tickets creados")
+        print("2. Ver Tickets asignados")
+        print("0. Volver al menu anterior")
+
+
+        try:
+            opcion = int(input("Seleccione una opción: "))
+            while opcion < 0 or opcion > 2:
+                opcion = int(input("Error, ingrese una opción válida: "))
+        except ValueError:
+            print("Error, ingrese un número válido.")
+        
+        if opcion == 0:
+            break
+        elif opcion == 1:
+            rutEjecutivo=input('Rut del ejecutivo: ')
+            db.mostrarTicketsPorCreador(rutEjecutivo)
+        elif opcion == 2:
+            rutEjecutivo=input('Rut del ejecutivo: ')
+            db.mostrarTicketsPorArea(rutEjecutivo)
+            respuesta = input("¿Desea Actualizar un ticket? (s/n): ").lower()
+            if respuesta == 's':
+                idTicketEditar= input("Ingrese el id del ticket a Actualizar: ")
+                print("Cambiar estado")
+                verEstadoMenu(idTicketEditar,rutEjecutivo)
         else:
             print("Opción no válida, por favor intente nuevamente.")
 
 
-   
+def verEstadoMenu(idTicketEditar,rutEjecutivo):
+    while True:
+        print("\n1. No Aplicable")
+        print("2.Resuelto")
+        print("0. Volver al menu anterior")
+        try:
+            opcion = int(input("Seleccione una opción: "))
+            while opcion < 0 or opcion > 2:
+                opcion = int(input("Error, ingrese una opción válida: "))
+        except ValueError:
+            print("Error, ingrese un número válido.")
+        
+        if opcion == 0:
+            break
+        elif opcion == 1:
+            nuevoEstado='No Aplicable'
+        elif opcion == 2:
+            nuevoEstado='Resuelto'
+        else:
+            print("Opción no válida, por favor intente nuevamente.")
+        
+        db.editarTicket(idTicketEditar,"estado",nuevoEstado)
+        db.mostrarTicketsPorArea(rutEjecutivo)
+
+        observacion =input("Debe agregar una observación: ")
+        print("Se procede a cerrar el ticket ")
+        nuevoEstado= 'Cerrado'
+        db.editarTicket(idTicketEditar,"estado",nuevoEstado)
+        db.editarTicket(idTicketEditar,"rutUsuarioCierre",rutEjecutivo)
+
+        print("Ticket cerrado")
+        break

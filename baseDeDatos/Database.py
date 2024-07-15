@@ -38,8 +38,9 @@ class Database:
                 return usuario,'jefe'
             else:
                 # Consultar en la tabla Ejecutivo
-                sql_ejecutivo = "SELECT * FROM Ejecutivo WHERE nombreUsuario = %s AND contraseña = %s"
-                self.cursor.execute(sql_ejecutivo, (nombre_usuario, contrasena))
+                estado = 'Activo'
+                sql_ejecutivo = "SELECT * FROM Ejecutivo WHERE estado=%s AND nombreUsuario = %s AND contraseña = %s"
+                self.cursor.execute(sql_ejecutivo, (estado,nombre_usuario, contrasena))
                 ejecutivo = self.cursor.fetchone()
                 if ejecutivo:  # valida que el ejecutivo exista
                     usuario = Ejecutivo(*ejecutivo)  # Instanciar objeto Ejecutivo
@@ -48,7 +49,8 @@ class Database:
                     return usuario,'ejecutivo'              
                 else:
                     print("Credenciales incorrectas. Intente nuevamente.")
-        except ValueError:
+                    return 'none','none'
+        except:
             print("Entrada no válida. Por favor, intente de nuevo.")
             return None
 
@@ -100,31 +102,32 @@ class Database:
             print(f"Error al crear criticidad: {err}")
 
     # Método para crear ticket
-    def crearTicket(self,idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica,observacion):
+    def crearTicket(self,idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica):
         estado = "Abierto"
         fechaCreacion = datetime.now().strftime('%Y-%m-%d')  # Formato estándar de fecha y hora
 
         sql = (
             "INSERT INTO Ticket (idTicket, rutUsuarioCreador, rutJefeMesa, idArea, idTipoTicket, idCriticidad, nombreCliente, "
             "apellidoPaternoCliente, apellidoMaternoCliente, rutCliente, telefonoCliente, correoCliente, detalleServicio, "
-            "detalleProblematica, fechaCreacion, estado, observacion) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            "detalleProblematica, fechaCreacion, estado) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         )
 
         values = (
             idTicket, rutUsuarioCreador, rutJefeMesa, idArea, idTipoTicket, idCriticidad, nombreCliente,
             apellidoPaternoCliente, apellidoMaternoCliente, rutCliente, telefonoCliente, correoCliente,
-            detalleServicio, detalleProblematica, fechaCreacion, estado, observacion
+            detalleServicio, detalleProblematica, fechaCreacion, estado
         )
 
         try:
             self.cursor.execute(sql, values)
             self.conexion.commit()
             print("ticket creado correctamente.")
+            return 'creado'
         except Exception as err:
             self.conexion.rollback()
             print(f"Error al crear ticket: {err}")
-
+            return 'no creado'
     # Método de editar area
     def editarArea(self, id_area, param, cambio):
         sql1 = "select * from Area where idArea=" + repr(id_area)
@@ -179,6 +182,27 @@ class Database:
                     print(f"Error al actualizar criticidad: {err}")
             else:
                 print("No existe dicha criticidad")
+        except Exception as err:
+            print(err)
+
+    # función de editar ticket
+    def editarTicket(self,id_ticket, param, cambio):
+        sql1 = "select * from ticket where idTicket=" + repr(id_ticket)
+        try:
+            self.cursor.execute(sql1)
+            if self.cursor.fetchone() != None:  # valida que el ticket exista
+                sql =  f"UPDATE ticket SET {param} = %s WHERE idticket= %s"
+                try:
+                    self.cursor.execute(sql,(cambio, id_ticket))
+                    self.conexion.commit()
+                    print("Ticket actualizado correctamente.")
+                    return 'actualizado'
+                except Exception as err:
+                    self.conexion.rollback()
+                    print(f"Error al actualizar ticket: {err}")
+                    return 'no actualizado'
+            else:
+                print("No existe dicha ticket")
         except Exception as err:
             print(err)
 
@@ -346,7 +370,44 @@ class Database:
             
         except Exception as err:
             print(err)
+    
+    # funcion que muestra los ticket por creador
+    def mostrarTicketsPorCreador(self,rutEjecutivo):
+        sql = "SELECT idTicket,idArea,idTipoTicket,idCriticidad,detalleServicio,detalleProblematica,estado,observacion FROM ticket where rutUsuarioCreador="+repr(rutEjecutivo)+ "AND estado != 'Cerrado'"
+        try:
+            self.cursor.execute(sql)
+            respuesta = self.cursor.fetchall()
+            print ("----- Tickets creados-----")
+            print(tabulate(respuesta, headers=['ID','Area','Tipo de ticket','Criticidad', 'Detalle servicio','Detalle problematica','Estado','Observación'], tablefmt='mixed_grid'))
+            
+        except Exception as err:
+            print(err)
+    
+    # funcion que muestra los ticket de un area especifica
+    def mostrarTicketsPorArea(self,rutEjecutivo):
+        sql1 = "select idArea from ejecutivo where rutEjecutivo=" + repr(rutEjecutivo)
+        try:
+            self.cursor.execute(sql1)
+            idArea_resultado = self.cursor.fetchone()
+            if idArea_resultado != None:  # valida que nos entrege algo
+                idArea = idArea_resultado[0]  # Extrae el valor del resultado
+                sql2 = "SELECT idTicket,idArea,idTipoTicket,idCriticidad,detalleServicio,detalleProblematica,estado,observacion FROM ticket where idArea="+repr(idArea)+"AND estado != 'Cerrado'"
+                try:
+                    self.cursor.execute(sql2)
+                    respuesta = self.cursor.fetchall()
+                    print ("----- Tickets creados-----")
+                    print(tabulate(respuesta, headers=['ID','Area','Tipo de ticket','Criticidad', 'Detalle servicio','Detalle problematica','Estado','Observación'], tablefmt='mixed_grid'))
+                    
+                except Exception as err:
+                    print(err)
+            else:
+                print("No existe dicha criticidad")
+        except Exception as err:
+            print(err)
 
+
+"""
+estos metodos no se han usado, hay que ver si los usamos sino eliminarlos
     # metodo que selecciona todos los ticket de la BD
     def selectTodos(self):
         sql = "SELECT * FROM ticket"
@@ -482,6 +543,7 @@ class Database:
         except Exception as err:
             print(err)
 
+
     def ver_ticket(self):
         while True: 
             filtro = input("Seleccione el filtro: \n1. Fecha específica\n2. Criticidad\n3. Tipo de ticket\n4. Ejecutivo que abre el ticket\n5. Ejecutivo que cierra el ticket\n6. Área\n0. Volver al menú\nOpción: ")
@@ -534,3 +596,4 @@ class Database:
                     except Exception as err:
                         self.conexion.rollback()
                         print(err)
+"""
