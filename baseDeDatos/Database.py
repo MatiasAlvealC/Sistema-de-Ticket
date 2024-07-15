@@ -1,6 +1,7 @@
 import mysql.connector
 from negocio.usuarios.JefeDeMesa import JefeDeMesa
 from negocio.usuarios.Ejecutivo import Ejecutivo
+from tabulate import tabulate
 
 """
     Conexion a la base de dato
@@ -36,6 +37,7 @@ class Database:
             if jefe_mesa:  # valida que el jefe exista
                 usuario = JefeDeMesa(*jefe_mesa)  # Instanciar objeto JefeDeMesa
                 print("Inicio de sesión exitoso como Jefe de Mesa.")
+                input('Presione Enter para continuar...')
                 return usuario,'jefe'
             else:
                 # Consultar en la tabla Ejecutivo
@@ -45,6 +47,7 @@ class Database:
                 if ejecutivo:  # valida que el ejecutivo exista
                     usuario = Ejecutivo(*ejecutivo)  # Instanciar objeto Ejecutivo
                     print("Inicio de sesión exitoso como Ejecutivo.")
+                    input('Presione Enter para continuar...')
                     return usuario,'ejecutivo'              
                 else:
                     print("Credenciales incorrectas. Intente nuevamente.")
@@ -54,20 +57,14 @@ class Database:
             return None
 
 # Método para crear ejecutivo
-    def crearEjecutivo(
-        self,
-        rut,estado,
-        nombre,
-        apellido_paterno,
-        apellido_materno,
-        nombre_usuario,
-        contrasena,
-    ):
-        sql = "INSERT INTO ejecutivo (rutEjecutivo, estado,nombre, apellidoPaterno, apellidoMaterno, nombreUsuario, contraseña) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    # Método para crear ejecutivo
+# Método para crear ejecutivo
+    def crearEjecutivo(self, rutEjecutivo, rutJefeMesa, idArea, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contraseña):
+        sql = "INSERT INTO ejecutivo (rutEjecutivo, rutJefeMesa, idArea, estado, nombre, apellidoPaterno, apellidoMaterno, nombreUsuario, contraseña) VALUES (" + repr(rutEjecutivo) + "," + repr(rutJefeMesa) + "," + repr(idArea) + "," + repr(estado) + "," + repr(nombre) + "," + repr(apellido_paterno) + "," + repr(apellido_materno) + "," + repr(nombre_usuario) + "," + repr(contraseña) + ")"
         try:
             # Suponiendo que por defecto el estado es 'Activo'
             estado = "Activo"
-            self.cursor.execute(sql,(rut,estado,nombre,apellido_paterno,apellido_materno,nombre_usuario,contrasena),)
+            self.cursor.execute(sql)
             self.conexion.commit()
             print("Ejecutivo creado correctamente.")
         except Exception as err:
@@ -99,36 +96,6 @@ class Database:
             insert into ejecutivo value ()"""
 
     # Método para crear ejecutivo
-    def crearEjecutivo(
-        self,
-        rut,
-        nombre,
-        apellido_paterno,
-        apellido_materno,
-        nombre_usuario,
-        contrasena,
-    ):
-        sql = "INSERT INTO ejecutivo (rutEjecutivo, nombre, apellidoPaterno, apellidoMaterno, nombreUsuario, contraseña, estado) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        try:
-            # Suponiendo que por defecto el estado es 'Activo'
-            estado = "Activo"
-            self.cursor.execute(
-                sql,
-                (
-                    rut,
-                    nombre,
-                    apellido_paterno,
-                    apellido_materno,
-                    nombre_usuario,
-                    contrasena,
-                    estado,
-                ),
-            )
-            self.conexion.commit()
-            print("Ejecutivo creado correctamente.")
-        except Exception as err:
-            self.conexion.rollback()
-            print(f"Error al crear ejecutivo: {err}")
 
     """ M2: Crear area, tipo de ticket y criticidad
             insert into area value()
@@ -136,10 +103,10 @@ class Database:
             insert into criticidad """
 
     # Método para crear una área
-    def crearArea(self, nombre_area, descripcion):
-        sql = "INSERT INTO area (nombreArea, descripcion) VALUES (%s, %s)"
+    def crearArea(self,idArea, rutJefeMesa, nombre, descripcion):
+        sql = "INSERT INTO area VALUES(" + repr(idArea) +","+repr(rutJefeMesa) + "," + repr(nombre) + "," + repr(descripcion) + ")" 
         try:
-            self.cursor.execute(sql, (nombre_area, descripcion))
+            self.cursor.execute(sql)
             self.conexion.commit()
             print("Área creada correctamente.")
         except Exception as err:
@@ -147,10 +114,10 @@ class Database:
             print(f"Error al crear área: {err}")
 
     # Método para crear tipo de ticket
-    def crearTipoTicket(self, nombre_tipo, descripcion):
-        sql = "INSERT INTO tipoDeTicket (nombreTipo, descripcion) VALUES (%s, %s)"
+    def crearTipoTicket(self, idTipoTicket, rutJefeMesa, nombre, descripcion):
+        sql = "INSERT INTO tipoTicket VALUES(" + repr(idTipoTicket) + "," + repr(rutJefeMesa) + "," + repr(nombre) + "," + repr(descripcion) + ")"
         try:
-            self.cursor.execute(sql, (nombre_tipo, descripcion))
+            self.cursor.execute(sql)
             self.conexion.commit()
             print("Tipo de ticket creado correctamente.")
         except Exception as err:
@@ -158,10 +125,10 @@ class Database:
             print(f"Error al crear tipo de ticket: {err}")
 
     # Método para crear
-    def crearCriticidad(self, nombre_criticidad, descripcion):
-        sql = "INSERT INTO criticidad (nombre, descripcion) VALUES (%s, %s)"
+    def crearCriticidad(self, idCriticidad, rutJefeMesa, nombre, descripcion):
+        sql = "INSERT INTO criticidad VALUES(" + repr(idCriticidad) + "," + repr(rutJefeMesa) + "," + repr(nombre) + "," + repr(descripcion) + ")"
         try:
-            self.cursor.execute(sql, (nombre_criticidad, descripcion))
+            self.cursor.execute(sql)
             self.conexion.commit()
             print("Criticidad creada correctamente.")
         except Exception as err:
@@ -173,7 +140,7 @@ class Database:
 
     # Método de editar area
     def editarArea(self, id_area, nombre_area, descripcion):
-        sql = "UPDATE area SET nombreArea = %s, descripcion = %s WHERE idArea = %s"
+        sql = "UPDATE area SET nombre = %s, descripcion = %s WHERE idArea = %s"
         try:
             self.cursor.execute(sql, (nombre_area, descripcion, id_area))
             self.conexion.commit()
@@ -184,7 +151,7 @@ class Database:
 
     # Método de editar tipo de ticket
     def editarTipoTicket(self, id_tipo, nombre_tipo, descripcion):
-        sql = "UPDATE tipoDeTicket SET nombreTipo = %s, descripcion = %s WHERE idTipoTicket = %s"
+        sql = "UPDATE tipoDeTicket SET nombre  = %s, descripcion = %s WHERE idTipoTicket = %s"
         try:
             self.cursor.execute(sql, (nombre_tipo, descripcion, id_tipo))
             self.conexion.commit()
@@ -194,15 +161,15 @@ class Database:
             print(f"Error al actualizar tipo de ticket: {err}")
 
     # Método de editar criticidad
-    def editarCriticidad(self, id_criticidad, nombre_criticidad, descripcion):
-        sql = "UPDATE criticidad SET nombre = %s, descripcion = %s WHERE idCriticidad = %s"
-        try:
-            self.cursor.execute(sql, (nombre_criticidad, descripcion, id_criticidad))
-            self.conexion.commit()
-            print("Criticidad actualizada correctamente.")
-        except Exception as err:
-            self.conexion.rollback()
-            print(f"Error al actualizar criticidad: {err}")
+        def editarCriticidad(self, id_criticidad, nombre_criticidad, descripcion):
+            sql = "UPDATE criticidad SET nombre = %s, descripcion = %s WHERE idCriticidad = %s"
+            try:
+                self.cursor.execute(sql, (nombre_criticidad, descripcion, id_criticidad))
+                self.conexion.commit()
+                print("Criticidad actualizada correctamente.")
+            except Exception as err:
+                self.conexion.rollback()
+                print(f"Error al actualizar criticidad: {err}")
 
     # Método eliminación area
 
@@ -226,6 +193,7 @@ class Database:
                         try:
                             self.cursor.execute(sql3)
                             self.conexion.commit()
+                            print("Área eliminada correctamente.")
                         except Exception as err:
                             self.conexion.rollback()
                             print(err)
@@ -248,7 +216,7 @@ class Database:
                 try:
                     self.cursor.execute(sql2)
                     if (
-                        self.cursor.fetchall() != None
+                        self.cursor.fetchone() != None
                     ):  # si no hay un area usandose en un ticket
                         print(
                             "No se puede eliminar, el tipo de ticket esta asociado ya un ticket"
@@ -465,6 +433,65 @@ class Database:
                 )
         except Exception as err:
             print(err)
+
+    def ver_ticket(self):
+        while True: 
+            filtro = input("Seleccione el filtro: \n1. Fecha específica\n2. Criticidad\n3. Tipo de ticket\n4. Ejecutivo que abre el ticket\n5. Ejecutivo que cierra el ticket\n6. Área\n0. Volver al menú\nOpción: ")
+            #menu para interfaz
+            if filtro == '0':
+                break
+
+            sql = ""
+            params = ()
+
+            if filtro == '1':
+                while True:
+                    fecha = input("Ingrese la fecha (YYYY-MM-DD): ")
+                    if len(fecha) == 10 and fecha[4] == '-' and fecha[7] == '-':
+                        break
+                    else:
+                        print("Formato de fecha incorrecto. Intente de nuevo.")
+                sql = ("SELECT DISTINCT Ticket.idTicket, Ejecutivo.nombre AS ejecutivoCreador, Ticket.fechaCreacion, TipoTicket.nombre AS tipoTicket, Criticidad.nombre AS criticidad, Area.nombre AS area, Ticket.estado "
+                    "FROM Ticket, Ejecutivo, TipoTicket, Criticidad, Area "
+                    "WHERE Ticket.rutUsuarioCreador = Ejecutivo.rutEjecutivo "
+                    "AND Ticket.idTipoTicket = TipoTicket.idTipoTicket "
+                    "AND Ticket.idCriticidad = Criticidad.idCriticidad "
+                    "AND Ticket.idArea = Area.idArea "
+                    "AND Ticket.fechaCreacion = %s")
+                params = (fecha,)
+            elif filtro == '2':
+                self.cursor.execute("SELECT idCriticidad, nombre FROM Criticidad")
+                opciones = self.cursor.fetchall()
+                print("Seleccione una opción:")
+                
+                # Mostrar las opciones numeradas
+                for i in range(len(opciones)):
+                    id_criticidad = opciones[i][0]
+                    nombre_criticidad = opciones[i][1]
+                    print(f"{i + 1}. {nombre_criticidad}")
+                
+                # Solicitar al usuario que seleccione una opción
+                opcion_seleccionada = int(input("Opción: ")) - 1
+                seleccionado_id = opciones[opcion_seleccionada][0]
+                
+                sql = ("SELECT idTicket,rutUsuarioCreador,fechaCreacion,idTipoTicket,idCriticidad,idArea, estado FROM Ticket WHERE idCriticidad = %s")
+                
+                params = (seleccionado_id,)
+                if sql:
+                    try:
+                        self.cursor.execute(sql, params)
+                        tickets = self.cursor.fetchall()
+                        print(tabulate(tickets, headers=['ID Ticket', 'Ejecutivo Creador', 'Area', 'Tipo Ticket', 'Criticidad', 'Nombre Cliente','Apellido Paterno','Apellido Materno','Detalle Servicio','Detalle Problematica','Fecha Creacion', 'Estado','Observacion'], tablefmt='mixed_grid'))
+                        input("Presione Enter para continuar...")  # Pausar para permitir que el usuario vea los resultados
+                    except Exception as err:
+                        self.conexion.rollback()
+                        print(err)
+
+
+
+
+
+        
 
 
 
