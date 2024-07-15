@@ -1,7 +1,30 @@
+""" 
+INSERT INTO Ticket  VALUES (
+    1, -- idTicket
+    '2-2', -- rutUsuarioCreador
+    '2-2', -- rutUsuarioCierre
+    '3-3', -- rutJefeMesa
+    '1', -- idArea
+    '1', -- idTipoTicket
+    '1', -- idCriticidad
+    'Juan', -- nombreCliente
+    'Pérez', -- apellidoPaternoCliente
+    'González', -- apellidoMaternoCliente
+    '1-9', -- rutCliente
+    '1234567890', -- telefonoCliente
+    'juan.perez@example.com', -- correoCliente
+    'Servicio de instalación', -- detalleServicio
+    'Problema con la instalación', -- detalleProblematica
+    '2024-07-15', -- fechaCreacion
+    '2024-07-16', -- fechaCierre
+    'Abierto', -- estado
+    'Observaciones adicionales' -- observacion
+);
+"""
 
 
 
-
+#INSERT INTO Ticket  VALUES (1,'2-2','2-2','3-3','1','1','1','Juan','Pérez','González','1-9','1234567890','juan.perez@example.com','Servicio de instalación','Problema con la instalación','2024-07-15','2024-07-16','Abierto','Observaciones adicionales');
 
 idTicket = input('Ingrese el id del ticket: ')
 rutUsuarioCreador =input('Rut del Creador del ticket: ')

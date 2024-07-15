@@ -1,11 +1,9 @@
-
-
 from baseDeDatos.Database import Database
 db = Database()
 
 def ejecutivoMenu():
     while True:
-        print("\n1. Ver Tickets")
+        print("\n1. Crear Ticket")
         print("2. Cambiar Estado del Ticket a 'Resuelto'")
         print("3. Cambiar Estado del Ticket a 'No aplicable'")
         print("4. Agregar Observación y Cerrar Ticket")
@@ -16,19 +14,35 @@ def ejecutivoMenu():
             opcion = int(input("Seleccione una opción: "))
             while opcion < 0 or opcion > 4:
                 opcion = int(input("Error, ingrese una opción válida: "))
-            return opcion
         except ValueError:
             print("Error, ingrese un número válido.")
 
 
 
-    # Manejo de opciones
+        # Manejo de opciones
 
         if opcion == 0:
-            print('x')
+            break
         elif opcion == 1:
-            print('x')
-            # Ver tickets
+            idTicket = input('Ingrese el id del ticket: ')
+            rutUsuarioCreador =input('Rut del Creador del ticket: ')
+
+            rutJefeMesa = input('Ingrese Rut Jefe de Mesa: ')
+            idArea = input('Ingrese id area: ')
+            idTipoTicket = input('Ingrese id Tipo Ticket=')
+            idCriticidad = input('Ingrese id Criticidad: ')
+
+            nombreCliente = input('Ingrese Nombre del Cliente: ')
+            apellidoPaternoCliente = input('Apellido Paterno: ')
+            apellidoMaternoCliente = input('Apellido Materno: ')
+            rutCliente = input('Rut del Cliente: ')
+            telefonoCliente = input('Telefono del Cliente: ')
+            correoCliente = input('Correo del Cliente: ')
+            detalleServicio = input('Detalles del Servicio: ')
+            detalleProblematica = input('Detalles de la problematica: ')
+            observacion = input('Ingrese Observacion: ')
+            db.crearTicket(idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica,observacion)
+
         elif opcion == 2:
             # Cambiar estado del ticket a 'Resuelto'
             while True:
