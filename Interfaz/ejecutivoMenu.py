@@ -1,4 +1,5 @@
 from baseDeDatos.Database import Database
+from tabulate import tabulate
 db = Database()
 
 def ejecutivoMenu():
@@ -47,9 +48,28 @@ def verCrearTicketMenu():
         detalleProblematica = input('Detalles de la problematica: ')
         resultado = db.crearTicket(idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica)
 
-        ##########################
-        # AQUI DEBERIA MOSTRAR EL TICKET UNA PRE-VISUALIZACION
-        ####################
+        #  PRE-VISUALIZACION del ticket
+        # Previsualización en tabla
+        datos = [
+            ['ID Ticket', idTicket],
+            ['Rut Ejecutivo Creador', rutUsuarioCreador],
+            ['Rut Jefe de Mesa', rutJefeMesa],
+            ['ID Area', idArea],
+            ['ID Tipo Ticket', idTipoTicket],
+            ['ID Criticidad', idCriticidad],
+            ['Nombre Cliente', nombreCliente],
+            ['Apellido Paterno Cliente', apellidoPaternoCliente],
+            ['Apellido Materno Cliente', apellidoMaternoCliente],
+            ['Rut Cliente', rutCliente],
+            ['Teléfono Cliente', telefonoCliente],
+            ['Correo Cliente', correoCliente],
+            ['Detalles del Servicio', detalleServicio],
+            ['Detalles de la Problemática', detalleProblematica]
+        ]
+
+        print("\nPrevisualización de datos ingresados:\n")
+        print(tabulate(datos, headers=['Campo Agregado', 'Dato'], tablefmt='grid'))
+        
         if resultado == 'creado':
             print(" Debe asignar a un área el ticket creado para ser resuelto")
             nuevoIdArea = input("A que área será asignado: ")
