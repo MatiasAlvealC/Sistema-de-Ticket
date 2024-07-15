@@ -21,20 +21,6 @@ def jefeMenu():
                 opcion=int(input("Error, ingrese una opcion valida ="))
         except ValueError:
             opcion=int(input("Error, ingrese una opcion ="))
-            
-            
-        
-        """for i in range(cant):
-            while True:
-                try:
-                    puntaje=int(input('Puntaje del juego '+str(i+1)+' (10-100)='))
-                    while puntaje<10 or puntaje>100:
-                        puntaje=int(input('Error, Puntaje del juego '+str(i+1)+' (10-100)='))
-                    total+=puntaje
-                    break
-                except ValueError:
-                    pass
-        """
 
 
         # Manejo de opciones

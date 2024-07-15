@@ -1,5 +1,7 @@
 from baseDeDatos.Database import Database
 from tabulate import tabulate
+from datetime import datetime
+
 db = Database()
 
 def ejecutivoMenu():
@@ -136,8 +138,11 @@ def verEstadoMenu(idTicketEditar,rutEjecutivo):
         observacion =input("Debe agregar una observación: ")
         print("Se procede a cerrar el ticket ")
         nuevoEstado= 'Cerrado'
+        fechaCierre: datetime.now().strftime('%Y-%m-%d')
+
         db.editarTicket(idTicketEditar,"estado",nuevoEstado)
         db.editarTicket(idTicketEditar,"rutUsuarioCierre",rutEjecutivo)
+        db.editarTicket(idTicketEditar,"fechaCierre",fechaCierre)
 
         print("Ticket cerrado")
         break

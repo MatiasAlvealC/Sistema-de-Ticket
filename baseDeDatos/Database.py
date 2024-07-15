@@ -128,6 +128,7 @@ class Database:
             self.conexion.rollback()
             print(f"Error al crear ticket: {err}")
             return 'no creado'
+            
     # Método de editar area
     def editarArea(self, id_area, param, cambio):
         sql1 = "select * from Area where idArea=" + repr(id_area)
