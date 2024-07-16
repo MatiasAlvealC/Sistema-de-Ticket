@@ -14,8 +14,8 @@ class Database:
         self.conexion = mysql.connector.connect(
             host="localhost",
             user="root",
-            #password="q1q1q1q1",
-            password="nueva_contrasena",
+            password="q1q1q1q1",
+            #password="nueva_contrasena",
             database="sistemticketdb",
         )
         self.cursor = self.conexion.cursor()
@@ -405,6 +405,52 @@ class Database:
                 print("No existe dicha criticidad")
         except Exception as err:
             print(err)
+
+    def ver_ticket(self, filtro,valor):
+        
+
+        base_sql = ("SELECT e.nombre AS EjecutivoCreador, t.fechaCreacion, tt.nombre AS tipoTicket, c.nombre AS criticidad, a.nombre AS area, t.estado "
+               "FROM ticket t, ejecutivo e, tipoticket tt, criticidad c, area a "
+               "WHERE t.rutUsuarioCreador = e.rutEjecutivo AND t.idTipoTicket = tt.idTipoTicket AND t.idCriticidad = c.idCriticidad AND t.idArea = a.idArea AND "
+               f"{filtro} = %s")
+
+
+        params = (valor,)
+
+        try:
+            self.cursor.execute(base_sql, params)
+            tickets = self.cursor.fetchall()
+            if tickets:
+                headers = ['Ejecutivo Creador', 'Fecha Creación', 'Tipo Ticket', 'Criticidad', 'Área', 'Estado']
+                print(tabulate(tickets, headers=headers, tablefmt='mixed_grid'))
+            else:
+                print("No se encontraron tickets para la opción seleccionada.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al ejecutar la consulta: {err}")
+        input('Presione enter para continuar')
+
+
+
+    def busquedaFiltro(self, opcion, columna):
+
+        sql = f"select {columna} from {opcion}"
+        try:
+
+            self.cursor.execute(sql)
+            opciones = self.cursor.fetchall()
+            resultados = tuple(opcion[0] for opcion in opciones)
+            return resultados
+        except Exception as err:
+            
+            self.conexion.rollback()
+            print(f"error al encontrar: {err}")
+            return ()
+
+
+
+
+
 
 
 """

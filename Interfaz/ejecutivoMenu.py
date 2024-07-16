@@ -138,7 +138,7 @@ def verEstadoMenu(idTicketEditar,rutEjecutivo):
         observacion =input("Debe agregar una observación: ")
         print("Se procede a cerrar el ticket ")
         nuevoEstado= 'Cerrado'
-        fechaCierre: datetime.now().strftime('%Y-%m-%d')
+        fechaCierre = datetime.now().strftime('%Y-%m-%d')
 
         db.editarTicket(idTicketEditar,"estado",nuevoEstado)
         db.editarTicket(idTicketEditar,"rutUsuarioCierre",rutEjecutivo)
@@ -146,3 +146,5 @@ def verEstadoMenu(idTicketEditar,rutEjecutivo):
 
         print("Ticket cerrado")
         break
+
+

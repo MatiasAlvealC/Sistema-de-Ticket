@@ -1,4 +1,5 @@
-from baseDeDatos.Database import Database
+from baseDeDatos.Database import *
+
 db = Database()
 
 
@@ -59,8 +60,7 @@ def jefeMenu():
         elif opcion == 5:
             while True:
                 try:
-                    input("Presione Enter para continuar...")  # Pausar para permitir que el usuario vea los resultados
-                    db.ver_ticket()
+                    ver_menu_filtro()
                 except ValueError:
                     print("Error, intente nuevamente.")
         else:
@@ -295,3 +295,85 @@ def gestionarCriticidad():
             input("Presione Enter para continuar...")
 
 
+def ver_menu_filtro():
+    while True:
+        print("\nSeleccione un filtro para ver los tickets:")
+        print("1. Fecha")
+        print("2. Criticidad")
+        print("3. Tipo de Ticket")
+        print("4. Ejecutivo que abrió el ticket")
+        print("5. Ejecutivo que cerró el ticket")
+        print("6. Área")
+        print("0. Cerrar")
+
+        try:
+            opcion = int(input("Seleccione una opción: "))
+            while opcion < 0 or opcion > 6:
+                opcion = int(input("Error, ingrese una opción válida: "))
+        except ValueError:
+            opcion = int(input("Error, ingrese una opción válida: "))
+
+        if opcion == 0:
+            break
+        elif opcion == 1:  # FECHA
+            while True:
+                fecha = input("Ingrese la fecha (YYYY-MM-DD): ")
+                if len(fecha) == 10 and fecha[4] == '-' and fecha[7] == '-':
+                    break
+                else:
+                    print("Formato de fecha incorrecto. Intente de nuevo.")
+            db.ver_ticket(filtro='DATE(t.fechaCreacion)', valor=fecha)
+
+        elif opcion == 2:  # CRITICIDAD
+            opciones = db.busquedaFiltro('Criticidad', 'nombre')
+
+            print("Seleccione una criticidad:")
+            for i, nombre_criticidad in enumerate(opciones, 1):
+                print(f"{i}. {nombre_criticidad}")
+            opcion_seleccionada = int(input("Opción: ")) - 1
+            seleccionado_nombre = opciones[opcion_seleccionada]
+            db.ver_ticket(filtro='c.nombre', valor=seleccionado_nombre)
+
+        elif opcion == 3:  # TIPOTICKET
+            opciones = db.busquedaFiltro('TipoTicket', 'nombre')
+
+            print("Seleccione un tipo de ticket:")
+            for i, nombre_tipo in enumerate(opciones, 1):
+                print(f"{i}. {nombre_tipo}")
+
+            opcion_seleccionada = int(input("Opción: ")) - 1
+            seleccionado_nombre = opciones[opcion_seleccionada]
+            db.ver_ticket(filtro='tt.nombre', valor=seleccionado_nombre)
+
+        elif opcion == 4:  # Ejecutivo que abrió el ticket
+            opciones = db.busquedaFiltro('Ejecutivo', 'nombre')
+
+            print("Lista de Ejecutivos:")
+            for i, nombre_ejecutivo in enumerate(opciones, 1):
+                print(f"{i}. {nombre_ejecutivo}")
+
+            opcion_seleccionada = int(input("Opción: ")) - 1
+            nombre_ejecutivo = opciones[opcion_seleccionada]
+            db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo)
+
+        elif opcion == 5:  # Ejecutivo que cerró el ticket
+            opciones = db.busquedaFiltro('Ejecutivo', 'nombre')
+
+            print("Lista de Ejecutivos:")
+            for i, nombre_ejecutivo in enumerate(opciones, 1):
+                print(f"{i}. {nombre_ejecutivo}")
+
+            opcion_seleccionada = int(input("Opción: ")) - 1
+            nombre_ejecutivo = opciones[opcion_seleccionada]
+            db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo)
+
+        elif opcion == 6:  # AREA
+            opciones = db.busquedaFiltro('Area', 'nombre')
+
+            print('Lista de Areas:')
+            for i, nombre_area in enumerate(opciones, 1):
+                print(f"{i}. {nombre_area}")
+
+            opcion_seleccionada = int(input("Opción: ")) - 1
+            nombre_area = opciones[opcion_seleccionada]
+            db.ver_ticket(filtro='a.nombre', valor=nombre_area)
