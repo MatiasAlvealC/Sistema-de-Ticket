@@ -31,40 +31,15 @@ def jefeMenu():
         if opcion == 0:
             break
         elif opcion == 1:
-            while True:
-                try:
-                    # se llama a la funcion adminsitrar ejecutivo, la que tiene el menu para administrar ejecutivos
-                    gestionarEjecutivo()
-                    break
-                except ValueError:
-                    print("Error, ingrese datos válidos.")
+            gestionarEjecutivo()
         elif opcion == 2:
-            while True:
-                try:
-                    gestionarArea()
-                    break
-                except ValueError:
-                    print("Error, ingrese datos válidos.")
+            gestionarArea()
         elif opcion == 3:
-            while True:
-                try:
-                    gestionarTipoTicket()
-                    break
-                except ValueError:
-                    print("Error, ingrese datos válidos.")
+            gestionarTipoTicket()
         elif opcion == 4:
-            while True:
-                try:
-                    gestionarCriticidad()
-                    break
-                except ValueError:
-                    print("Error, ingrese datos válidos.")
+            gestionarCriticidad()
         elif opcion == 5:
-            while True:
-                try:
-                    menuFiltro()
-                except ValueError:
-                    print("Error, intente nuevamente.")
+            menuFiltro()
         else:
             print("Opción no válida")
             input("Presione Enter para continuar...")
@@ -96,7 +71,7 @@ def gestionarEjecutivo():
         elif opcion == 2:   
             rutEjecutivo = input("Rut del ejecutivo: ")
             rutJefeMesa = input("Rut del Jefe de Mesa: ")
-            idArea = input('Id Area: ')
+            nombre_Area = input('Nombre Area: ')
             nombre = input("Nombre del ejecutivo: ")
             apellido_paterno = input("Apellido paterno del ejecutivo: ")
             apellido_materno = input("Apellido materno del ejecutivo: ")
@@ -104,7 +79,7 @@ def gestionarEjecutivo():
             contrasena=pwinput.pwinput("Contraseña del ejecutivo: ")
             contrasena = hashlib.md5(contrasena.encode('utf-8')).hexdigest()
             estado = "Activo"  # Estado predeterminado
-            db.crearEjecutivo(rutEjecutivo, rutJefeMesa, idArea, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena)
+            db.crearEjecutivo(rutEjecutivo, rutJefeMesa, nombre_Area, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena)
         elif opcion == 3:
             rutEjecutivo = input("Rut del ejecutivo a eliminar: ")
             db.EliminarEjecutivo(rutEjecutivo)
@@ -137,11 +112,10 @@ def gestionarArea():
         elif opcion == 1:
             db.mostrarAreas()
         elif opcion == 2:
-            idArea = input("ID del área: ")
             rutJefeMesa = input("Rut del Jefe de Mesa: ")
             nombre_area = input("Nombre del área: ")
             descripcion = input("Descripción del área: ")
-            db.crearArea(idArea, rutJefeMesa, nombre_area, descripcion)
+            db.crearArea(rutJefeMesa, nombre_area, descripcion)
         elif opcion == 3:
             idArea = input("ID del área a editar: ")
             while True:
@@ -205,11 +179,10 @@ def gestionarTipoTicket():
         elif opcion == 1:
             db.mostrarTipoTicketes()
         elif opcion == 2:
-            idTipoTicket = input("ID del tipo de ticket: ")
             rutJefeMesa = input("Rut del Jefe de Mesa: ")
             nombre_tipoTicket = input("Nombre del tipo de ticket: ")
             descripcion = input("Descripción del tipo de ticket: ")
-            db.crearTipoTicket(idTipoTicket, rutJefeMesa, nombre_tipoTicket, descripcion)
+            db.crearTipoTicket(rutJefeMesa, nombre_tipoTicket, descripcion)
         elif opcion == 3:
             idTipoTicket = input("ID del tipo de ticket a editar: ")
             while True:
@@ -273,11 +246,10 @@ def gestionarCriticidad():
         elif opcion == 1:
             db.mostrarCriticidades()
         elif opcion == 2:
-            idCriticidad = input("ID del criticidad: ")
             rutJefeMesa = input("Rut del Jefe de Mesa: ")
             nombre_criticidad = input("Nombre del criticidad: ")
             descripcion = input("Descripción del criticidad: ")
-            db.crearCriticidad(idCriticidad, rutJefeMesa, nombre_criticidad, descripcion)
+            db.crearCriticidad(rutJefeMesa, nombre_criticidad, descripcion)
         elif opcion == 3:
             idCriticidad = input("ID del criticidad a editar: ")
             while True:
@@ -318,14 +290,15 @@ def gestionarCriticidad():
 
 def menuFiltro():
     while True:
-        print("\nSeleccione un filtro para ver los tickets:")
-        print("1. Fecha")
+        limpiar_pantalla()  # Limpia la pantalla 
+        print("Seleccione un filtro para ver los tickets:")
+        print("\n1. Fecha")
         print("2. Criticidad")
         print("3. Tipo de Ticket")
         print("4. Ejecutivo que abrió el ticket")
         print("5. Ejecutivo que cerró el ticket")
         print("6. Área")
-        print("0. Cerrar")
+        print("0. Volver al menu anterior")
 
         try:
             opcion = int(input("Seleccione una opción: "))

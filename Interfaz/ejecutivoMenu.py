@@ -33,13 +33,12 @@ def ejecutivoMenu():
             print("Opción no válida, por favor intente nuevamente.")
 
 def verCrearTicketMenu():
-        idTicket = input('Ingrese el id del ticket: ')
         rutUsuarioCreador =input('Rut del Creador del ticket: ')
 
         rutJefeMesa = input('Ingrese Rut Jefe de Mesa: ')
-        idArea = input('Ingrese id area: ')
-        idTipoTicket = input('Ingrese id Tipo Ticket=')
-        idCriticidad = input('Ingrese id Criticidad: ')
+        nombre_Area = input('Ingrese nombre area: ')
+        nombre_TipoTicket = input('Ingrese nombre Tipo Ticket=')
+        nombre_Criticidad = input('Ingrese nombre Criticidad: ')
 
         nombreCliente = input('Ingrese Nombre del Cliente: ')
         apellidoPaternoCliente = input('Apellido Paterno: ')
@@ -49,19 +48,18 @@ def verCrearTicketMenu():
         correoCliente = input('Correo del Cliente: ')
         detalleServicio = input('Detalles del Servicio: ')
         detalleProblematica = input('Detalles de la problematica: ')
-        resultado = db.crearTicket(idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica)
+        resultado = db.crearTicket(rutUsuarioCreador,rutJefeMesa,nombre_Area,nombre_TipoTicket,nombre_Criticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica)
 
         limpiar_pantalla()  # Limpia la pantalla 
         
         #  PRE-VISUALIZACION del ticket
         # Previsualización en tabla
         datos = [
-            ['ID Ticket', idTicket],
             ['Rut Ejecutivo Creador', rutUsuarioCreador],
             ['Rut Jefe de Mesa', rutJefeMesa],
-            ['ID Area', idArea],
-            ['ID Tipo Ticket', idTipoTicket],
-            ['ID Criticidad', idCriticidad],
+            ['Area', nombre_Area],
+            ['Tipo Ticket', nombre_TipoTicket],
+            ['Criticidad', nombre_Criticidad],
             ['Nombre Cliente', nombreCliente],
             ['Apellido Paterno Cliente', apellidoPaternoCliente],
             ['Apellido Materno Cliente', apellidoMaternoCliente],
@@ -77,11 +75,24 @@ def verCrearTicketMenu():
         
         if resultado == 'creado':
             print(" Debe asignar a un área el ticket creado para ser resuelto")
-            nuevoIdArea = input("A que área será asignado: ")
-            resultado= db.editarTicket(idTicket,"idArea",nuevoIdArea)
-            if resultado == 'actualizado':
-                print("Se le ha asignado un área al ticket")
-                db.editarTicket(idTicket,"estado",'A resolución')
+            nuevoArea = input("A que área será asignado: ")
+            try:
+                idArea = db.buscarIdArea(nuevoArea)
+                if idArea is not None:
+                    idTicket = db.buscarIdTicket(rutCliente)
+                    if idTicket is not None:
+                        resultado = db.editarTicket(idTicket, "idArea", idArea)
+                        if resultado == 'actualizado':
+                            print("Se le ha asignado un área al ticket")
+                            db.editarTicket(idTicket, "estado", 'A resolución')
+                    else:
+                        print("No se encontró ningún ticket para el cliente especificado.")
+                else:
+                    print("El área especificada no existe.")
+            except Exception as e:
+                print(f"Error: {e}")
+        else :
+            print("Ticket no creado, verifique que datos ingresado sean correctos")
 
 def verTicketMenu():
     while True:
