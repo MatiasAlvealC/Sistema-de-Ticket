@@ -120,10 +120,11 @@ class Database:
             print(f"Error al crear criticidad: {err}")
 
     # Método para crear ticket
-    def crearTicket(self,rutUsuarioCreador,rutJefeMesa,nombre_Area,nombre_TipoTicket,nombre_Criticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica):
+    def crearTicket(self,rutUsuarioCreador,nombre_Area,nombre_TipoTicket,nombre_Criticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica):
         sql1 = "select idArea from area where nombre="+repr(nombre_Area)
         sql2 = "select idTipoTicket from tipoTicket where nombre="+repr(nombre_TipoTicket)
         sql3 = "select idCriticidad from criticidad where nombre="+repr(nombre_Criticidad)
+        sql4 = "select rutJefeMesa from ejecutivo where rutEjecutivo="+repr(rutUsuarioCreador)
 
         try:
             self.cursor.execute(sql1)
@@ -134,10 +135,16 @@ class Database:
             
             self.cursor.execute(sql3)
             idCriticidad_resultado = self.cursor.fetchone()
-            if idArea_resultado is not None or idTipoTicket_resultado is not None or idCriticidad_resultado is not None:  # valida que nos entrege algo
+
+            self.cursor.execute(sql4)
+            rutJefeMesa_resultado = self.cursor.fetchone()
+
+            if idArea_resultado is not None or idTipoTicket_resultado is not None or idCriticidad_resultado is not None or rutJefeMEsa_resultado is not None:  # valida que nos entrege algo
                 idArea = idArea_resultado[0]  # Extrae el valor del resultado
                 idTipoTicket = idTipoTicket_resultado[0]
                 idCriticidad = idCriticidad_resultado[0]
+                rutJefeMesa = rutJefeMesa_resultado[0]
+
                 estado = "Abierto"
                 fechaCreacion = datetime.now().strftime('%Y-%m-%d')  # Formato estándar de fecha y hora
                 sql = (
@@ -458,6 +465,8 @@ class Database:
         except Exception as err:
             print(err)
 
+    ###########################
+    #### HACE ALGO ESTE METODO???????????
     def ver_ticket(self, filtro,valor):
         
 

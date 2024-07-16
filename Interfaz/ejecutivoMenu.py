@@ -5,7 +5,7 @@ from datetime import datetime
 
 db = Database()
 
-def ejecutivoMenu():
+def ejecutivoMenu(ejecutivo):
     while True:
         print("\n1. Ver tickets")
         print("2. Crear Ticket")
@@ -26,46 +26,47 @@ def ejecutivoMenu():
         if opcion == 0:
             break
         elif opcion == 1:
-            verTicketMenu()
+            verTicketMenu(ejecutivo)
         elif opcion == 2:
-            verCrearTicketMenu()
+            verCrearTicketMenu(ejecutivo)
         else:
             print("Opción no válida, por favor intente nuevamente.")
 
-def verCrearTicketMenu():
-        rutUsuarioCreador =input('Rut del Creador del ticket: ')
-
-        rutJefeMesa = input('Ingrese Rut Jefe de Mesa: ')
-        nombre_Area = input('Ingrese nombre area: ')
-        nombre_TipoTicket = input('Ingrese nombre Tipo Ticket=')
-        nombre_Criticidad = input('Ingrese nombre Criticidad: ')
-
+def verCrearTicketMenu(ejecutivo):
+        # Datos para crear el ticket
+        # Datos personales del cliente
         nombreCliente = input('Ingrese Nombre del Cliente: ')
         apellidoPaternoCliente = input('Apellido Paterno: ')
         apellidoMaternoCliente = input('Apellido Materno: ')
         rutCliente = input('Rut del Cliente: ')
         telefonoCliente = input('Telefono del Cliente: ')
         correoCliente = input('Correo del Cliente: ')
+        
+        # Datos sobre el ticket
+        nombre_Area = input('Ingrese nombre area: ')
+        nombre_TipoTicket = input('Ingrese nombre Tipo Ticket=')
+        nombre_Criticidad = input('Ingrese nombre Criticidad: ')
+        
+        # Detalles de la atencion
         detalleServicio = input('Detalles del Servicio: ')
         detalleProblematica = input('Detalles de la problematica: ')
-        resultado = db.crearTicket(rutUsuarioCreador,rutJefeMesa,nombre_Area,nombre_TipoTicket,nombre_Criticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica)
+        
+        resultado = db.crearTicket(ejecutivo.rut,nombre_Area,nombre_TipoTicket,nombre_Criticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica)
 
         limpiar_pantalla()  # Limpia la pantalla 
         
         #  PRE-VISUALIZACION del ticket
         # Previsualización en tabla
         datos = [
-            ['Rut Ejecutivo Creador', rutUsuarioCreador],
-            ['Rut Jefe de Mesa', rutJefeMesa],
-            ['Area', nombre_Area],
-            ['Tipo Ticket', nombre_TipoTicket],
-            ['Criticidad', nombre_Criticidad],
             ['Nombre Cliente', nombreCliente],
             ['Apellido Paterno Cliente', apellidoPaternoCliente],
             ['Apellido Materno Cliente', apellidoMaternoCliente],
             ['Rut Cliente', rutCliente],
             ['Teléfono Cliente', telefonoCliente],
             ['Correo Cliente', correoCliente],
+            ['Area', nombre_Area],
+            ['Tipo Ticket', nombre_TipoTicket],
+            ['Criticidad', nombre_Criticidad],
             ['Detalles del Servicio', detalleServicio],
             ['Detalles de la Problemática', detalleProblematica]
         ]
@@ -91,10 +92,10 @@ def verCrearTicketMenu():
                     print("El área especificada no existe.")
             except Exception as e:
                 print(f"Error: {e}")
-        else :
+        else:
             print("Ticket no creado, verifique que datos ingresado sean correctos")
 
-def verTicketMenu():
+def verTicketMenu(ejecutivo):
     while True:
         print("\n1. Ver tickets creados")
         print("2. Ver Tickets asignados")
@@ -113,16 +114,22 @@ def verTicketMenu():
         if opcion == 0:
             break
         elif opcion == 1:
-            rutEjecutivo=input('Rut del ejecutivo: ')
-            db.mostrarTicketsPorCreador(rutEjecutivo)
+            limpiar_pantalla()  # Limpia la pantalla 
+            db.mostrarTicketsPorCreador(ejecutivo.rut)
         elif opcion == 2:
-            rutEjecutivo=input('Rut del ejecutivo: ')
-            db.mostrarTicketsPorArea(rutEjecutivo)
-            respuesta = input("¿Desea Actualizar un ticket? (s/n): ").lower()
+            db.mostrarTicketsPorArea(ejecutivo.rut)
+            try:
+                respuesta = input("¿desea actualizar un ticket? (s/n): ").lower()
+                while respuesta != 's' and respuesta != 'n':
+                    print("respuesta inválida. por favor ingrese 's' para sí o 'n' para no.")
+                    respuesta = input("¿desea actualizar un ticket? (s/n): ").lower()
+            except ValueError:
+                print("Error, ingrese s o n válido.")
+
             if respuesta == 's':
                 idTicketEditar= input("Ingrese el id del ticket a Actualizar: ")
                 print("Cambiar estado")
-                verEstadoMenu(idTicketEditar,rutEjecutivo)
+                verEstadoMenu(idTicketEditar,ejecutivo.rut)
         else:
             print("Opción no válida, por favor intente nuevamente.")
 

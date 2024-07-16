@@ -18,6 +18,6 @@ while True:
 
     limpiar_pantalla()  # Limpia la pantalla 
     if perfil == "jefe":
-        jefeMenu()
+        jefeMenu(usuario)
     elif perfil == "ejecutivo":
-        ejecutivoMenu()
+        ejecutivoMenu(usuario)

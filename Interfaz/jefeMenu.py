@@ -6,9 +6,8 @@ db = Database()
 
 
 # Funcion principal del menu ejecutivo
-def jefeMenu():
+def jefeMenu(jefe): 
     while True:
-
         print("\n1. Gestionar Ejecutivos")
         print("2. Gestionar Área")
         print("3. Gestionar Tipo de Ticket")
@@ -31,13 +30,13 @@ def jefeMenu():
         if opcion == 0:
             break
         elif opcion == 1:
-            gestionarEjecutivo()
+            gestionarEjecutivo(jefe)
         elif opcion == 2:
-            gestionarArea()
+            gestionarArea(jefe)
         elif opcion == 3:
-            gestionarTipoTicket()
+            gestionarTipoTicket(jefe)
         elif opcion == 4:
-            gestionarCriticidad()
+            gestionarCriticidad(jefe)
         elif opcion == 5:
             menuFiltro()
         else:
@@ -47,7 +46,7 @@ def jefeMenu():
 
 # Función gestionar ejecutivos
 
-def gestionarEjecutivo():
+def gestionarEjecutivo(jefe):
     while True:
 
         print("\n1. Ver Ejecutivos")
@@ -67,10 +66,10 @@ def gestionarEjecutivo():
         if opcion == 0:
             break
         elif opcion == 1:
+            limpiar_pantalla()  # Limpia la pantalla 
             db.mostrarEjectuvos()
         elif opcion == 2:   
             rutEjecutivo = input("Rut del ejecutivo: ")
-            rutJefeMesa = input("Rut del Jefe de Mesa: ")
             nombre_Area = input('Nombre Area: ')
             nombre = input("Nombre del ejecutivo: ")
             apellido_paterno = input("Apellido paterno del ejecutivo: ")
@@ -79,7 +78,8 @@ def gestionarEjecutivo():
             contrasena=pwinput.pwinput("Contraseña del ejecutivo: ")
             contrasena = hashlib.md5(contrasena.encode('utf-8')).hexdigest()
             estado = "Activo"  # Estado predeterminado
-            db.crearEjecutivo(rutEjecutivo, rutJefeMesa, nombre_Area, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena)
+
+            db.crearEjecutivo(rutEjecutivo, jefe.rut, nombre_Area, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena)
         elif opcion == 3:
             rutEjecutivo = input("Rut del ejecutivo a eliminar: ")
             db.EliminarEjecutivo(rutEjecutivo)
@@ -89,7 +89,7 @@ def gestionarEjecutivo():
 
 # Función Gestionar Area
 
-def gestionarArea():
+def gestionarArea(jefe):
     while True:
 
         print("\n1. Ver Areas")
@@ -110,12 +110,13 @@ def gestionarArea():
         if opcion == 0:
             break
         elif opcion == 1:
+            limpiar_pantalla()  # Limpia la pantalla 
             db.mostrarAreas()
         elif opcion == 2:
-            rutJefeMesa = input("Rut del Jefe de Mesa: ")
+            print("----Nueva Área----")
             nombre_area = input("Nombre del área: ")
             descripcion = input("Descripción del área: ")
-            db.crearArea(rutJefeMesa, nombre_area, descripcion)
+            db.crearArea(jefe.rut, nombre_area, descripcion)
         elif opcion == 3:
             idArea = input("ID del área a editar: ")
             while True:
@@ -135,9 +136,11 @@ def gestionarArea():
                 if opcion == 0:
                     break
                 elif opcion == 1:
+                    print("----Actualización Área----")
                     nuevoElemento = input("Nuevo nombre: ")
                     param = "nombre"
                 elif opcion == 2:
+                    print("----Actualización Área----")
                     nuevoElemento = input("Nueva descripcion: ")
                     param = "descripcion"
                 else:
@@ -156,7 +159,7 @@ def gestionarArea():
 
 # Función Gestionar tipode ticket
 
-def gestionarTipoTicket():
+def gestionarTipoTicket(jefe):
     while True:
 
         print("\n1. Ver Tipo de tickets")
@@ -177,12 +180,13 @@ def gestionarTipoTicket():
         if opcion == 0:
             break
         elif opcion == 1:
+            limpiar_pantalla()  # Limpia la pantalla 
             db.mostrarTipoTicketes()
         elif opcion == 2:
-            rutJefeMesa = input("Rut del Jefe de Mesa: ")
+            print("----Nuevo Tipo de Ticket----")
             nombre_tipoTicket = input("Nombre del tipo de ticket: ")
             descripcion = input("Descripción del tipo de ticket: ")
-            db.crearTipoTicket(rutJefeMesa, nombre_tipoTicket, descripcion)
+            db.crearTipoTicket(jefe.rut, nombre_tipoTicket, descripcion)
         elif opcion == 3:
             idTipoTicket = input("ID del tipo de ticket a editar: ")
             while True:
@@ -202,9 +206,11 @@ def gestionarTipoTicket():
                 if opcion == 0:
                     break
                 elif opcion == 1:
+                    print("----Actualización Tipo de Ticket----")
                     nuevoElemento = input("Nuevo nombre: ")
                     param = "nombre"
                 elif opcion == 2:
+                    print("----Actualización Tipo de Ticket----")
                     nuevoElemento = input("Nueva descripcion: ")
                     param = "descripcion"
                 else:
@@ -223,7 +229,7 @@ def gestionarTipoTicket():
 
 # Función Gestionar Criticidad
 
-def gestionarCriticidad():
+def gestionarCriticidad(jefe):
     while True:
 
         print("\n1. Ver criticidades")
@@ -244,12 +250,13 @@ def gestionarCriticidad():
         if opcion == 0:
             break
         elif opcion == 1:
+            limpiar_pantalla()  # Limpia la pantalla 
             db.mostrarCriticidades()
         elif opcion == 2:
-            rutJefeMesa = input("Rut del Jefe de Mesa: ")
+            print("----Nueva Criticidada----")
             nombre_criticidad = input("Nombre del criticidad: ")
             descripcion = input("Descripción del criticidad: ")
-            db.crearCriticidad(rutJefeMesa, nombre_criticidad, descripcion)
+            db.crearCriticidad(jefe.rut, nombre_criticidad, descripcion)
         elif opcion == 3:
             idCriticidad = input("ID del criticidad a editar: ")
             while True:
@@ -269,9 +276,11 @@ def gestionarCriticidad():
                 if opcion == 0:
                     break
                 elif opcion == 1:
+                    print("----Actualización Criticidad----")
                     nuevoElemento = input("Nuevo nombre: ")
                     param = "nombre"
                 elif opcion == 2:
+                    print("----Actualización Criticidad----")
                     nuevoElemento = input("Nueva descripcion: ")
                     param = "descripcion"
                 else:
