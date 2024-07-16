@@ -1,4 +1,5 @@
 from baseDeDatos.Database import Database
+from Interfaz.limpiarPantalla import *
 from tabulate import tabulate
 from datetime import datetime
 
@@ -19,7 +20,7 @@ def ejecutivoMenu():
             print("Error, ingrese un número válido.")
 
 
-
+        limpiar_pantalla()  # Limpia la pantalla 
         # Manejo de opciones
 
         if opcion == 0:
@@ -50,6 +51,8 @@ def verCrearTicketMenu():
         detalleProblematica = input('Detalles de la problematica: ')
         resultado = db.crearTicket(idTicket,rutUsuarioCreador,rutJefeMesa,idArea,idTipoTicket,idCriticidad,nombreCliente,apellidoPaternoCliente,apellidoMaternoCliente,rutCliente,telefonoCliente,correoCliente,detalleServicio,detalleProblematica)
 
+        limpiar_pantalla()  # Limpia la pantalla 
+        
         #  PRE-VISUALIZACION del ticket
         # Previsualización en tabla
         datos = [
@@ -93,7 +96,9 @@ def verTicketMenu():
                 opcion = int(input("Error, ingrese una opción válida: "))
         except ValueError:
             print("Error, ingrese un número válido.")
-        
+
+        limpiar_pantalla()  # Limpia la pantalla 
+
         if opcion == 0:
             break
         elif opcion == 1:
@@ -122,6 +127,8 @@ def verEstadoMenu(idTicketEditar,rutEjecutivo):
                 opcion = int(input("Error, ingrese una opción válida: "))
         except ValueError:
             print("Error, ingrese un número válido.")
+        
+        limpiar_pantalla()  # Limpia la pantalla 
         
         if opcion == 0:
             break

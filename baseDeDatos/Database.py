@@ -3,7 +3,8 @@ from negocio.usuarios.JefeDeMesa import JefeDeMesa
 from negocio.usuarios.Ejecutivo import Ejecutivo
 from tabulate import tabulate
 from datetime import datetime
-
+import hashlib
+import pwinput  
 """
     Conexion a la base de dato
 """
@@ -14,8 +15,8 @@ class Database:
         self.conexion = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="q1q1q1q1",
-            #password="nueva_contrasena",
+            #password="q1q1q1q1",
+            password="nueva_contrasena",
             database="sistemticketdb",
         )
         self.cursor = self.conexion.cursor()
@@ -23,9 +24,17 @@ class Database:
     def cerrarBD(self):
         self.cursor.close()
         self.conexion.close()
+    
+    def login(self):
+        nombre=input('Ingrese nombre del usuario=')
+        password=pwinput.pwinput('Ingrese contraseña=')
+        password = hashlib.md5(password.encode('utf-8')).hexdigest()
+        return nombre,password
+
 
     # Funcion para iniciar sesion
-    def iniciarSesion(self, nombre_usuario, contrasena):
+    def iniciarSesion(self):#, nombre_usuario, contrasena):
+        nombre_usuario,contrasena=self.login()
         # Conexión a la base de datos
         try:
             sql_jefe = "SELECT * FROM jefemesa WHERE nombreUsuario = %s AND contrasena = %s"
@@ -392,7 +401,7 @@ class Database:
             idArea_resultado = self.cursor.fetchone()
             if idArea_resultado != None:  # valida que nos entrege algo
                 idArea = idArea_resultado[0]  # Extrae el valor del resultado
-                sql2 = "SELECT idTicket,idArea,idTipoTicket,idCriticidad,detalleServicio,detalleProblematica,estado,observacion FROM ticket where idArea="+repr(idArea)+"AND estado != 'Cerrado'"
+                sql2 = "SELECT idTicket,idArea,idTipoTicket,idCriticidad,detalleServicio,detalleProblematica,estado,observacion FROM ticket where idArea="+repr(idArea)+" AND estado != 'Cerrado'"
                 try:
                     self.cursor.execute(sql2)
                     respuesta = self.cursor.fetchall()
@@ -402,7 +411,7 @@ class Database:
                 except Exception as err:
                     print(err)
             else:
-                print("No existe dicha criticidad")
+                print("No existe dicha")
         except Exception as err:
             print(err)
 

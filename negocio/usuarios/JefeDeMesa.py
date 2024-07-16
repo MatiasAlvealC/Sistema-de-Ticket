@@ -10,6 +10,3 @@ class JefeDeMesa(Usuario):
         
         
         
-    # agregar los metodos
-    # CRUD area,criticad, tipo de ticket, ticket y ejecutivos
-        
