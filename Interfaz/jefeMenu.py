@@ -69,19 +69,45 @@ def gestionarEjecutivo(jefe):
             limpiar_pantalla()  # Limpia la pantalla 
             db.mostrarEjectuvos()
         elif opcion == 2:   
+
             rutEjecutivo = input("Rut del ejecutivo: ")
+            while  rutEjecutivo == '':
+                rutEjecutivo = input("Error, Rut del ejecutivo: ")
+
             nombre_Area = input('Nombre Area: ')
+            while  nombre_Area == '':
+                nombre_Area = input('Error, Nombre Area: ')
+
             nombre = input("Nombre del ejecutivo: ")
+            while nombre == '':
+                nombre = input("Error, Nombre del ejecutivo: ")
+
             apellido_paterno = input("Apellido paterno del ejecutivo: ")
+            while  apellido_paterno == '':
+                apellido_paterno = input("Error, Apellido paterno del ejecutivo: ")
+
             apellido_materno = input("Apellido materno del ejecutivo: ")
+            while  apellido_materno== '':
+                apellido_materno = input("Error, Apellido materno del ejecutivo: ")
+
             nombre_usuario = input("Nombre de usuario del ejecutivo: ")
+            while nombre_usuario == '':
+                nombre_usuario = input("Error, Nombre de usuario del ejecutivo: ")
+
             contrasena=pwinput.pwinput("Contraseña del ejecutivo: ")
+            while  contrasena== '':
+                contrasena=pwinput.pwinput("Error, Contraseña del ejecutivo: ")
+
             contrasena = hashlib.md5(contrasena.encode('utf-8')).hexdigest()
             estado = "Activo"  # Estado predeterminado
 
             db.crearEjecutivo(rutEjecutivo, jefe.rut, nombre_Area, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena)
+        
         elif opcion == 3:
             rutEjecutivo = input("Rut del ejecutivo a eliminar: ")
+            while rutEjecutivo== '':
+                rutEjecutivo = input("Error, Rut del ejecutivo a eliminar: ")
+
             db.EliminarEjecutivo(rutEjecutivo)
         else:
             print("Opción no válida")
@@ -115,7 +141,13 @@ def gestionarArea(jefe):
         elif opcion == 2:
             print("----Nueva Área----")
             nombre_area = input("Nombre del área: ")
+            while nombre_area== '':
+                nombre_area = input("Error, Nombre del área: ")
+
             descripcion = input("Descripción del área: ")
+            while descripcion== '':
+                descripcion = input("Error, Descripción del área: ")
+
             db.crearArea(jefe.rut, nombre_area, descripcion)
         elif opcion == 3:
             idArea = input("ID del área a editar: ")
@@ -138,10 +170,17 @@ def gestionarArea(jefe):
                 elif opcion == 1:
                     print("----Actualización Área----")
                     nuevoElemento = input("Nuevo nombre: ")
+                    while nuevoElemento == '':
+                        nuevoElemento = input("Error, Nuevo nombre: ")
+
                     param = "nombre"
+
                 elif opcion == 2:
                     print("----Actualización Área----")
                     nuevoElemento = input("Nueva descripcion: ")
+                    while nuevoElemento == '':
+                        nuevoElemento = input("Error, Nueva descripcion: ")
+
                     param = "descripcion"
                 else:
                     print("Opción no válida")
@@ -150,11 +189,13 @@ def gestionarArea(jefe):
                 break
         elif opcion == 4:
             idArea = input("Id del area a eliminar: ")
+            while idArea == '':
+                idArea = input("Error, Id del area a eliminar: ")
+
             db.eliminarAreaPorId(idArea)
         else:
             print("Opción no válida")
             input("Presione Enter para continuar...")
-
 
 
 # Función Gestionar tipode ticket
@@ -185,7 +226,11 @@ def gestionarTipoTicket(jefe):
         elif opcion == 2:
             print("----Nuevo Tipo de Ticket----")
             nombre_tipoTicket = input("Nombre del tipo de ticket: ")
+            while nombre_tipoTicket == '':
+                nombre_tipoTicket = input("Error,Nombre del tipo de ticket: ")
             descripcion = input("Descripción del tipo de ticket: ")
+            while descripcion == '':
+                descripcion = input("Error, Descripción del tipo de ticket: ")
             db.crearTipoTicket(jefe.rut, nombre_tipoTicket, descripcion)
         elif opcion == 3:
             idTipoTicket = input("ID del tipo de ticket a editar: ")
@@ -208,10 +253,16 @@ def gestionarTipoTicket(jefe):
                 elif opcion == 1:
                     print("----Actualización Tipo de Ticket----")
                     nuevoElemento = input("Nuevo nombre: ")
+                    while nuevoElemento == '':
+                        nuevoElemento = input("Error, Nuevo nombre: ")
+
                     param = "nombre"
                 elif opcion == 2:
                     print("----Actualización Tipo de Ticket----")
                     nuevoElemento = input("Nueva descripcion: ")
+                    while nuevoElemento == '':
+                        nuevoElemento = input("Error, Nueva descripcion: ")
+
                     param = "descripcion"
                 else:
                     print("Opción no válida")
@@ -220,12 +271,13 @@ def gestionarTipoTicket(jefe):
                 break
         elif opcion == 4:
             idArea = input("Id del tipo de ticket a eliminar: ")
+            while idArea == '':
+                idArea = input("Error, Id del tipo de ticket a eliminar: ")
+
             db.eliminarTipoDeTicketPorId(idTipoTicket)
         else:
             print("Opción no válida")
             input("Presione Enter para continuar...")
-
-
 
 # Función Gestionar Criticidad
 
@@ -255,7 +307,13 @@ def gestionarCriticidad(jefe):
         elif opcion == 2:
             print("----Nueva Criticidada----")
             nombre_criticidad = input("Nombre de la criticidad: ")
+            while nombre_criticidad == '':
+                nombre_criticidad = input("Error, Nombre de la criticidad: ")
+
             descripcion = input("Descripción de la criticidad: ")
+            while descripcion == '':
+                descripcion = input("Descripción de la criticidad: ")
+
             db.crearCriticidad(jefe.rut, nombre_criticidad, descripcion)
         elif opcion == 3:
             idCriticidad = input("ID del criticidad a editar: ")
@@ -278,10 +336,16 @@ def gestionarCriticidad(jefe):
                 elif opcion == 1:
                     print("----Actualización Criticidad----")
                     nuevoElemento = input("Nuevo nombre: ")
+                    while nuevoElemento == '':
+                        nuevoElemento = input("Error, Nuevo nombre: ")
+
                     param = "nombre"
                 elif opcion == 2:
                     print("----Actualización Criticidad----")
                     nuevoElemento = input("Nueva descripcion: ")
+                    while nuevoElemento == '':
+                        nuevoElemento = input("Error, Nueva descripcion: ")
+
                     param = "descripcion"
                 else:
                     print("Opción no válida")
@@ -290,6 +354,9 @@ def gestionarCriticidad(jefe):
                 break
         elif opcion == 4:
             idCriticidad = input("Id del criticidad a eliminar: ")
+            while idCriticidad == '':
+                idCriticidad = input("Error, Id del criticidad a eliminar: ")
+
             db.eliminarCriticidadPorId(idCriticidad)
         else:
             print("Opción no válida")
@@ -322,6 +389,8 @@ def menuFiltro():
         elif opcion == 1:  # FECHA
             while True:
                 fecha = input("Ingrese la fecha (YYYY-MM-DD): ")
+                while fecha == '':
+                    fecha = input("Error, Ingrese la fecha (YYYY-MM-DD): ")
                 if len(fecha) == 10 and fecha[4] == '-' and fecha[7] == '-':
                     break
                 else:
@@ -337,11 +406,14 @@ def menuFiltro():
             print("Seleccione una criticidad:")
             for i, nombre_criticidad in enumerate(opciones, 1):
                 print(f"{i}. {nombre_criticidad}")
-            opcion_seleccionada = int(input("Opción: ")) - 1
-
+            opcion_seleccionada = (input("Opción: ")) 
+            while opcion_seleccionada == '':
+                opcion_seleccionada = (input("Error, Opción: "))
+            opcion_seleccionada = int(opcion_seleccionada)- 1
             limpiar_pantalla()  # Limpia la pantalla 
 
             seleccionado_nombre = opciones[opcion_seleccionada]
+            
             print(f"Mostrar tickets filtrados por criticidad: {seleccionado_nombre}")
             db.ver_ticket(filtro='c.nombre', valor=seleccionado_nombre)
 
@@ -352,8 +424,10 @@ def menuFiltro():
             for i, nombre_tipo in enumerate(opciones, 1):
                 print(f"{i}. {nombre_tipo}")
 
-            opcion_seleccionada = int(input("Opción: ")) - 1
-
+            opcion_seleccionada = (input("Opción: ")) 
+            while opcion_seleccionada == '':
+                opcion_seleccionada = (input("Error, Opción: "))
+            opcion_seleccionada = int(opcion_seleccionada)- 1
             limpiar_pantalla()  # Limpia la pantalla 
 
 
@@ -368,7 +442,10 @@ def menuFiltro():
             for i, nombre_ejecutivo in enumerate(opciones, 1):
                 print(f"{i}. {nombre_ejecutivo}")
 
-            opcion_seleccionada = int(input("Opción: ")) - 1
+            opcion_seleccionada = (input("Opción: ")) 
+            while opcion_seleccionada == '':
+                opcion_seleccionada = (input("Error, Opción: "))
+            opcion_seleccionada = int(opcion_seleccionada)- 1
 
             limpiar_pantalla()  # Limpia la pantalla 
 
@@ -406,8 +483,11 @@ def menuFiltro():
             for i, nombre_area in enumerate(opciones, 1):
                 print(f"{i}. {nombre_area}")
 
-            opcion_seleccionada = int(input("Opción: ")) - 1
-                
+            opcion_seleccionada = (input("Opción: ")) 
+            while opcion_seleccionada == '':
+                opcion_seleccionada = (input("Error, Opción: "))
+            opcion_seleccionada = int(opcion_seleccionada)- 1
+
             limpiar_pantalla()  # Limpia la pantalla 
 
             nombre_area = opciones[opcion_seleccionada]
