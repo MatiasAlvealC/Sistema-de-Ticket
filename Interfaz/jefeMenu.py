@@ -254,8 +254,8 @@ def gestionarCriticidad(jefe):
             db.mostrarCriticidades()
         elif opcion == 2:
             print("----Nueva Criticidada----")
-            nombre_criticidad = input("Nombre del criticidad: ")
-            descripcion = input("Descripción del criticidad: ")
+            nombre_criticidad = input("Nombre de la criticidad: ")
+            descripcion = input("Descripción de la criticidad: ")
             db.crearCriticidad(jefe.rut, nombre_criticidad, descripcion)
         elif opcion == 3:
             idCriticidad = input("ID del criticidad a editar: ")
@@ -296,7 +296,6 @@ def gestionarCriticidad(jefe):
             input("Presione Enter para continuar...")
 
 # Función para el menu de filtro de ticket
-
 def menuFiltro():
     while True:
         limpiar_pantalla()  # Limpia la pantalla 
@@ -378,19 +377,27 @@ def menuFiltro():
             db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo)
 
         elif opcion == 5:  # Ejecutivo que cerró el ticket
-            opciones = db.busquedaFiltro('Ejecutivo', 'nombre')
-
-            print("Lista de Ejecutivos:")
-            for i, nombre_ejecutivo in enumerate(opciones, 1):
+            opciones = db.busquedaFiltro('Ejecutivo', 'nombre', "rutEjecutivo IN (SELECT rutUsuarioCierre FROM Ticket WHERE estado = 'Cerrado')") #Busqueda en base de datos
+            
+            print("Lista de Ejecutivos que cerraron tickets:")
+            for i, nombre_ejecutivo in enumerate(opciones, 1):#Muestra la lista de nombres de ejecutivo que cerraron tickets
                 print(f"{i}. {nombre_ejecutivo}")
 
-            opcion_seleccionada = int(input("Opción: ")) - 1
-            
+            while True:
+                try:
+                    opcion_seleccionada = int(input("Opción: ")) - 1 #Este codigo verifica si la opcion seleccionada esta entre las opciones 
+                    if 0 <= opcion_seleccionada < len(opciones):
+                        break
+                    else:
+                        print("Opción no válida. Intente de nuevo.")
+                except ValueError:
+                    print("Error, ingrese un número válido")
+
             limpiar_pantalla()  # Limpia la pantalla 
 
-            nombre_ejecutivo = opciones[opcion_seleccionada]
-            print(f"Mostrar tickets filtrados por ejecutivo que cerró: {nombre_ejecutivo}")
-            db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo)
+            nombre_ejecutivo = opciones[opcion_seleccionada] #Obtiene el nombre del ejecutivo que cerro el ticket mostrado en la lista
+            print(f"Mostrar tickets filtrados por ejecutivo que cerró: {nombre_ejecutivo}") 
+            db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo) #Se llama a la funcion ver_ticket para realizar una busqueda en la base de datos que muestre el nombre del ejecutivo que cerro el ticket.
 
         elif opcion == 6:  # AREA
             opciones = db.busquedaFiltro('Area', 'nombre')

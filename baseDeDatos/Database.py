@@ -25,6 +25,8 @@ class Database:
         self.cursor.close()
         self.conexion.close()
     
+
+    # Método de login con la seguridad para la contraseña
     def login(self):
         nombre=input('Ingrese nombre del usuario=')
         password=pwinput.pwinput('Ingrese contraseña=')
@@ -32,8 +34,10 @@ class Database:
         return nombre,password
 
 
-    # Funcion para iniciar sesion
-    def iniciarSesion(self):#, nombre_usuario, contrasena):
+    # Método para iniciar sesion, usa login()
+    # Además, instancia cada a usuario (jefe de mesa o ejecutivos)
+
+    def iniciarSesion(self):
         nombre_usuario,contrasena=self.login()
         # Conexión a la base de datos
         try:
@@ -63,6 +67,10 @@ class Database:
             print("Entrada no válida. Por favor, intente de nuevo.")
             return None
 
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    # Metodos de crear (create) ejecutivo, area, tipo de ticket, criticidad y ticket
 
     # Método para crear ejecutivo
     def crearEjecutivo(self, rutEjecutivo, rutJefeMesa, nombre_Area, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contraseña):
@@ -139,7 +147,7 @@ class Database:
             self.cursor.execute(sql4)
             rutJefeMesa_resultado = self.cursor.fetchone()
 
-            if idArea_resultado is not None or idTipoTicket_resultado is not None or idCriticidad_resultado is not None or rutJefeMEsa_resultado is not None:  # valida que nos entrege algo
+            if idArea_resultado is not None or idTipoTicket_resultado is not None or idCriticidad_resultado is not None or rutJefeMesa_resultado is not None:  # valida que nos entrege algo
                 idArea = idArea_resultado[0]  # Extrae el valor del resultado
                 idTipoTicket = idTipoTicket_resultado[0]
                 idCriticidad = idCriticidad_resultado[0]
@@ -173,7 +181,14 @@ class Database:
             self.conexion.rollback()
             print(f"Error al crear encontrar area,tipo de ticket o criticidad: {err}")
             
-    # Método de editar area
+
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    # Metodos de editar (update) area, tipo de ticket, criticidad y ticket
+
+
+    # Método de editar area con parametros ingresados por el usuario
     def editarArea(self, id_area, param, cambio):
         sql1 = "select * from Area where idArea=" + repr(id_area)
         try:
@@ -192,7 +207,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # Método de editar tipo de ticket
+    # Método de editar tipo de ticket con parametros ingresados por el usuario
     def editarTipoTicket(self, id_tipo, param, cambio):
         sql1 = "select * from tipoTicket where idTipoTicket=" + repr(id_tipo)
         try:
@@ -211,7 +226,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # Método de editar criticidad
+    # Método de editar criticidad con parametros ingresados por el usuario
     def editarCriticidad(self,id_criticidad, param, cambio):
         sql1 = "select * from criticidad where idCriticidad=" + repr(id_criticidad)
         try:
@@ -230,7 +245,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # función de editar ticket
+    # Método de editar ticket con parametros ingresados por el usuario
     def editarTicket(self,id_ticket, param, cambio):
         sql1 = "select * from ticket where idTicket=" + repr(id_ticket)
         try:
@@ -250,6 +265,12 @@ class Database:
                 print("No existe dicha ticket")
         except Exception as err:
             print(err)
+
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    # Metodos de eliminar (delete) ejecutivo, area, tipo de ticket, criticidad y ticket
+
 
     # Método para actualizar el estado del ejecutivo de Desactivado
     # Que seria eliminarlo para la vista
@@ -275,8 +296,8 @@ class Database:
                 print("No existe dicho ejecutivo")
         except Exception as err:
             print(err)
-    # Método eliminación area
 
+    # Método eliminación area por id ingresado por el usuario
     def eliminarAreaPorId(self,idArea):
         sql1 = "select * from Area where idArea=" + repr(idArea)
         try:
@@ -305,8 +326,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # Método eliminación tipo de ticket
-
+    # Método eliminación tipo de ticket por id ingresado por el usuario
     def eliminarTipoDeTicketPorId(self,idTipoTicket):
         sql1 = "select * from tipoTicket where idTipoTicket=" + repr(idTipoTicket)
         try:
@@ -335,8 +355,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # Método eliminación criticidad
-
+    # Método eliminación criticidad por id ingresado por el usuario
     def eliminarCriticidadPorId(self,idCriticidad):
         sql1 = "select * from criticidad where idCriticidad=" + repr(idCriticidad)
         try:
@@ -366,8 +385,12 @@ class Database:
             print(err)
 
     ###########################################################################################################################################
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    # Metodos de mostrar (read) ejecutivo, area, tipo de ticket, criticidad y ticket
 
-    # funcion que muestra los ejecutivos 
+
+    # Método que muestra los ejecutivos 
     def mostrarEjectuvos(self):
         condicion = "Activo"
         sql = "SELECT e.rutEjecutivo,e.nombre,e.apellidoPaterno,e.apellidoMaterno,a.nombre as nombreArea FROM ejecutivo e, area a where a.idArea = e.idArea and e.estado ="+repr(condicion)
@@ -380,7 +403,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # funcion que muestra las areas
+    # Método que muestra las areas
     def mostrarAreas(self):
         sql = "SELECT idArea,nombre,descripcion FROM area"
         try:
@@ -392,7 +415,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # funcion que muestra los tipos de ticket
+    # Método que muestra los tipos de ticket
     def mostrarTipoTicketes(self):
         sql = "SELECT idTipoTicket,nombre,descripcion FROM tipoTicket"
         try:
@@ -404,7 +427,7 @@ class Database:
         except Exception as err:
             print(err)
 
-    # funcion que muestra las criticidades
+    # Método que muestra las criticidades
     def mostrarCriticidades(self):
         sql = "SELECT idCriticidad,nombre,descripcion FROM criticidad"
         try:
@@ -416,7 +439,7 @@ class Database:
         except Exception as err:
             print(err)
     
-    # funcion que muestra los ticket por creador
+    # Método que muestra los ticket por creador
     def mostrarTicketsPorCreador(self, rutEjecutivo):
         sql = "SELECT t.idTicket, a.nombre as nombreArea, tt.nombre as tipoTicket, c.nombre as criticidad, " \
             "t.detalleServicio, t.detalleProblematica, t.estado, t.observacion " \
@@ -435,7 +458,7 @@ class Database:
             print(err)
 
     
-    # funcion que muestra los ticket de un area especifica
+    # Método que muestra los ticket de un area especifica
     def mostrarTicketsPorArea(self, rutEjecutivo):
         sql1 = "SELECT idArea FROM ejecutivo WHERE rutEjecutivo=" + repr(rutEjecutivo)
         try:
@@ -465,15 +488,67 @@ class Database:
         except Exception as err:
             print(err)
 
-    ###########################
-    #### HACE ALGO ESTE METODO???????????
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    # Metodos de buscar id ticket y area
+
+    def buscarIdTicket(self,rutCliente):
+        sql = "SELECT idTicket FROM ticket where rutCliente="+repr(rutCliente)
+        try:
+            self.cursor.execute(sql)
+            respuesta = self.cursor.fetchone()
+            return respuesta[0]
+            
+        except Exception as err:
+            print(err)
+            return 'none'
+
+    def buscarIdArea(self,nombre):
+        sql = "SELECT idArea FROM area where nombre="+repr(nombre)
+        try:
+            self.cursor.execute(sql)
+            respuesta = self.cursor.fetchone()
+            return respuesta[0]
+            
+        except Exception as err:
+            print(err)
+            return 'none'
+
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    # Metodos que busca las columnas que solicite el usuario, entrega una tupla con los obtenido por select especifico
+    def busquedaFiltro(self, opcion, columna,condicion=None):
+
+            sql = f"select {columna} from {opcion}" #Realiza una busqueda en una tabla entregada a traves de la llamada del metodo en el menu JefeMesa
+                #La tabla y la columna son pasadas como argumentos en la llamada al método.
+            if condicion:
+                sql += f' WHERE {condicion}' #Agrega una condicion WHERE si en la llamada del metodo hay una condicion.
+            try:
+
+                self.cursor.execute(sql)
+                opciones = self.cursor.fetchall()
+                resultados = tuple(opcion[0] for opcion in opciones)
+                return resultados
+            except Exception as err:
+                
+                self.conexion.rollback()
+                print(f"error al encontrar: {err}")
+                return ()
+
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    ###########################################################################################################################################
+    # Metodo que muestra los parametros o columnas solicitados por el autor con la condicion especifica que necesita
+
     def ver_ticket(self, filtro,valor):
         
 
         base_sql = ("SELECT e.nombre AS EjecutivoCreador, t.fechaCreacion, tt.nombre AS tipoTicket, c.nombre AS criticidad, a.nombre AS area, t.estado "
-               "FROM ticket t, ejecutivo e, tipoticket tt, criticidad c, area a "
-               "WHERE t.rutUsuarioCreador = e.rutEjecutivo AND t.idTipoTicket = tt.idTipoTicket AND t.idCriticidad = c.idCriticidad AND t.idArea = a.idArea AND "
-               f"{filtro} = %s")
+            "FROM ticket t, ejecutivo e, tipoticket tt, criticidad c, area a "
+            "WHERE t.rutUsuarioCreador = e.rutEjecutivo AND t.idTipoTicket = tt.idTipoTicket AND t.idCriticidad = c.idCriticidad AND t.idArea = a.idArea AND "
+            f"{filtro} = %s")
 
 
         params = (valor,)
@@ -490,43 +565,5 @@ class Database:
             self.conexion.rollback()
             print(f"Error al ejecutar la consulta: {err}")
         input('Presione enter para continuar')
-
-
-    def buscarIdTicket(self,rutCliente):
-        sql = "SELECT idTicket FROM ticket where rutCliente="+repr(rutCliente)
-        try:
-            self.cursor.execute(sql)
-            respuesta = self.cursor.fetchone()
-            return respuesta[0]
-            
-        except Exception as err:
-            print(err)
-            return 'none'
-    def buscarIdArea(self,nombre):
-        sql = "SELECT idArea FROM area where nombre="+repr(nombre)
-        try:
-            self.cursor.execute(sql)
-            respuesta = self.cursor.fetchone()
-            return respuesta[0]
-            
-        except Exception as err:
-            print(err)
-            return 'none'
-
-    def busquedaFiltro(self, opcion, columna):
-
-        sql = f"select {columna} from {opcion}"
-        try:
-
-            self.cursor.execute(sql)
-            opciones = self.cursor.fetchall()
-            resultados = tuple(opcion[0] for opcion in opciones)
-            return resultados
-        except Exception as err:
-            
-            self.conexion.rollback()
-            print(f"error al encontrar: {err}")
-            return ()
-
 
 
