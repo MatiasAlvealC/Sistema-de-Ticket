@@ -566,4 +566,28 @@ class Database:
             print(f"Error al ejecutar la consulta: {err}")
         input('Presione enter para continuar')
 
+    def ver_ticketCerrado(self, filtro,valor):
+        
+
+        base_sql = ("SELECT e.nombre AS EjecutivoCreador, t.fechaCreacion, tt.nombre AS tipoTicket, c.nombre AS criticidad, a.nombre AS area, t.estado "
+            "FROM ticket t, ejecutivo e, tipoticket tt, criticidad c, area a "
+            "WHERE t.rutUsuarioCreador = e.rutEjecutivo AND t.idTipoTicket = tt.idTipoTicket AND t.idCriticidad = c.idCriticidad AND t.idArea = a.idArea AND  t.estado = 'Cerrado' AND "
+            f"{filtro} = %s")
+
+
+        params = (valor,)
+
+        try:
+            self.cursor.execute(base_sql, params)
+            tickets = self.cursor.fetchall()
+            if tickets:
+                headers = ['Ejecutivo Creador', 'Fecha Creación', 'Tipo Ticket', 'Criticidad', 'Área', 'Estado']
+                print(tabulate(tickets, headers=headers, tablefmt='mixed_grid'))
+            else:
+                print("No se encontraron tickets para la opción seleccionada.")
+        except Exception as err:
+            self.conexion.rollback()
+            print(f"Error al ejecutar la consulta: {err}")
+        input('Presione enter para continuar')
+
 

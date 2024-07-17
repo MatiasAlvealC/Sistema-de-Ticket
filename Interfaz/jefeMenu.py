@@ -474,7 +474,7 @@ def menuFiltro():
 
             nombre_ejecutivo = opciones[opcion_seleccionada] #Obtiene el nombre del ejecutivo que cerro el ticket mostrado en la lista
             print(f"Mostrar tickets filtrados por ejecutivo que cerró: {nombre_ejecutivo}") 
-            db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo) #Se llama a la funcion ver_ticket para realizar una busqueda en la base de datos que muestre el nombre del ejecutivo que cerro el ticket.
+            db.ver_ticketCerrado(filtro='e.nombre', valor=nombre_ejecutivo) #Se llama a la funcion ver_ticket para realizar una busqueda en la base de datos que muestre el nombre del ejecutivo que cerro el ticket.
 
         elif opcion == 6:  # AREA
             opciones = db.busquedaFiltro('Area', 'nombre')
