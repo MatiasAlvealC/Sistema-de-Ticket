@@ -17,6 +17,7 @@ class Database:
             user="root",
             #password="q1q1q1q1",
             password="nueva_contrasena",
+            #database="sistemt2",
             database="sistemticketdb",
         )
         self.cursor = self.conexion.cursor()
