@@ -101,7 +101,11 @@ def gestionarEjecutivo(jefe):
             contrasena = hashlib.md5(contrasena.encode('utf-8')).hexdigest()
             estado = "Activo"  # Estado predeterminado
 
-            db.crearEjecutivo(rutEjecutivo, jefe.rut, nombre_Area, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena)
+            res = db.crearEjecutivo(rutEjecutivo, jefe.rut, nombre_Area, estado, nombre, apellido_paterno, apellido_materno, nombre_usuario, contrasena)
+            if res != 'exito':
+                print("Error, se equivoco a ingresar el area")
+            else:
+                print("Ejecutivo creado con exito")
         
         elif opcion == 3:
             rutEjecutivo = input("Rut del ejecutivo a eliminar: ")
@@ -407,15 +411,17 @@ def menuFiltro():
             for i, nombre_criticidad in enumerate(opciones, 1):
                 print(f"{i}. {nombre_criticidad}")
             opcion_seleccionada = (input("Opción: ")) 
-            while opcion_seleccionada == '':
-                opcion_seleccionada = (input("Error, Opción: "))
-            opcion_seleccionada = int(opcion_seleccionada)- 1
-            limpiar_pantalla()  # Limpia la pantalla 
-
-            seleccionado_nombre = opciones[opcion_seleccionada]
+            try: 
+                while opcion_seleccionada == '':
+                    opcion_seleccionada = (input("Error, Opción: "))
+                opcion_seleccionada = int(opcion_seleccionada)- 1
+                limpiar_pantalla()  # Limpia la pantalla 
+                seleccionado_nombre = opciones[opcion_seleccionada]
+                print(f"Mostrar tickets filtrados por criticidad: {seleccionado_nombre}")
+                db.ver_ticket(filtro='c.nombre', valor=seleccionado_nombre)
+            except ValueError:
+                print("Opcion mal ingresada, ingrese un numero")
             
-            print(f"Mostrar tickets filtrados por criticidad: {seleccionado_nombre}")
-            db.ver_ticket(filtro='c.nombre', valor=seleccionado_nombre)
 
         elif opcion == 3:  # TIPOTICKET
             opciones = db.busquedaFiltro('TipoTicket', 'nombre')
@@ -423,17 +429,18 @@ def menuFiltro():
             print("Seleccione un tipo de ticket:")
             for i, nombre_tipo in enumerate(opciones, 1):
                 print(f"{i}. {nombre_tipo}")
-
-            opcion_seleccionada = (input("Opción: ")) 
-            while opcion_seleccionada == '':
-                opcion_seleccionada = (input("Error, Opción: "))
-            opcion_seleccionada = int(opcion_seleccionada)- 1
-            limpiar_pantalla()  # Limpia la pantalla 
-
-
-            seleccionado_nombre = opciones[opcion_seleccionada]
-            print(f"Mostrar tickets filtrados por tipo de ticket: {seleccionado_nombre}")
-            db.ver_ticket(filtro='tt.nombre', valor=seleccionado_nombre)
+            try:
+                opcion_seleccionada = (input("Opción: ")) 
+                while opcion_seleccionada == '':
+                    opcion_seleccionada = (input("Error, Opción: "))
+                opcion_seleccionada = int(opcion_seleccionada)- 1
+                limpiar_pantalla()  # Limpia la pantalla 
+                seleccionado_nombre = opciones[opcion_seleccionada]
+                print(f"Mostrar tickets filtrados por tipo de ticket: {seleccionado_nombre}")
+                db.ver_ticket(filtro='tt.nombre', valor=seleccionado_nombre)
+            except ValueError:
+                print("Opcion mal ingresada, ingrese un numero")
+            
 
         elif opcion == 4:  # Ejecutivo que abrió el ticket
             opciones = db.busquedaFiltro('Ejecutivo', 'nombre')
@@ -442,16 +449,19 @@ def menuFiltro():
             for i, nombre_ejecutivo in enumerate(opciones, 1):
                 print(f"{i}. {nombre_ejecutivo}")
 
-            opcion_seleccionada = (input("Opción: ")) 
-            while opcion_seleccionada == '':
-                opcion_seleccionada = (input("Error, Opción: "))
-            opcion_seleccionada = int(opcion_seleccionada)- 1
+            try:
+                opcion_seleccionada = (input("Opción: ")) 
+                while opcion_seleccionada == '':
+                    opcion_seleccionada = (input("Error, Opción: "))
+                opcion_seleccionada = int(opcion_seleccionada)- 1
 
-            limpiar_pantalla()  # Limpia la pantalla 
+                limpiar_pantalla()  # Limpia la pantalla 
 
-            nombre_ejecutivo = opciones[opcion_seleccionada]
-            print(f"Mostrar tickets filtrados por ejecutivo que abrió: {nombre_ejecutivo}")
-            db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo)
+                nombre_ejecutivo = opciones[opcion_seleccionada]
+                print(f"Mostrar tickets filtrados por ejecutivo que abrió: {nombre_ejecutivo}")
+                db.ver_ticket(filtro='e.nombre', valor=nombre_ejecutivo)
+            except ValueError:
+                print("Opcion mal ingresada, ingrese un numero")
 
         elif opcion == 5:  # Ejecutivo que cerró el ticket
             opciones = db.busquedaFiltro('Ejecutivo', 'nombre', "rutEjecutivo IN (SELECT rutUsuarioCierre FROM Ticket WHERE estado = 'Cerrado')") #Busqueda en base de datos
@@ -483,16 +493,19 @@ def menuFiltro():
             for i, nombre_area in enumerate(opciones, 1):
                 print(f"{i}. {nombre_area}")
 
-            opcion_seleccionada = (input("Opción: ")) 
-            while opcion_seleccionada == '':
-                opcion_seleccionada = (input("Error, Opción: "))
-            opcion_seleccionada = int(opcion_seleccionada)- 1
+            try:
+                opcion_seleccionada = (input("Opción: ")) 
+                while opcion_seleccionada == '':
+                    opcion_seleccionada = (input("Error, Opción: "))
+                opcion_seleccionada = int(opcion_seleccionada)- 1
 
-            limpiar_pantalla()  # Limpia la pantalla 
+                limpiar_pantalla()  # Limpia la pantalla 
 
-            nombre_area = opciones[opcion_seleccionada]
-            print(f"Mostrar tickets filtrados por área: {nombre_area}")
-            db.ver_ticket(filtro='a.nombre', valor=nombre_area)
+                nombre_area = opciones[opcion_seleccionada]
+                print(f"Mostrar tickets filtrados por área: {nombre_area}")
+                db.ver_ticket(filtro='a.nombre', valor=nombre_area)
+            except ValueError:
+                print("Error, ingrese un número válido")
         else:
             print("Opción no válida")
             input("Presione Enter para continuar...")

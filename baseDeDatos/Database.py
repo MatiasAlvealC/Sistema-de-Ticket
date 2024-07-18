@@ -87,6 +87,7 @@ class Database:
                     estado = "Activo"
                     self.cursor.execute(sql)
                     self.conexion.commit()
+                    return 'exito'
                     print("Ejecutivo creado correctamente.")
                 except Exception as err:
                     self.conexion.rollback()
